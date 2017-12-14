@@ -1,16 +1,12 @@
-import configparser
 import json
-from os.path import expanduser
 from urllib.parse import urlparse
 
 import click
 from coreapi import Client
 from coreapi import transports
 
-def get_config_value(name):
-    config = configparser.ConfigParser()
-    config.read(expanduser("~/.cloudlaunch"))
-    return config['cloudlaunch-cli'].get(name, None) if 'cloudlaunch-cli' in config else None
+from . import config_util
+
 
 @click.group()
 def client():
@@ -32,21 +28,11 @@ def set_config(name, value):
     - token: an auth token for authenticating with the CloudLaunch API. See
       documentation for how to obtain an auth token
     """
-    config = configparser.ConfigParser()
-    config.read(expanduser("~/.cloudlaunch"))
-    if 'cloudlaunch-cli' not in config:
-        config['cloudlaunch-cli'] = {}
-    config['cloudlaunch-cli'][name] = value
-    with open(expanduser("~/.cloudlaunch"), 'w') as configfile:
-        config.write(configfile)
+    config_util.set_config_value(name, value)
 
 @click.command()
 def show_config():
-    config = configparser.ConfigParser()
-    config.read(expanduser("~/.cloudlaunch"))
-    if 'cloudlaunch-cli' not in config:
-        return
-    for name, value in config['cloudlaunch-cli'].items():
+    for name, value in config_util.get_config_values().items():
         print("{name}={value}".format(name=name, value=value))
 
 @click.group()
@@ -62,8 +48,8 @@ def deployments():
 def create_deployment(name, application, cloud, application_version, config_app):
     # TODO: if application_version not specified then fetch the default version and use that instead
     # TODO: move coreapi Client instantiation to separate function
-    auth_token = get_config_value("token")
-    url = get_config_value("url")
+    auth_token = config_util.get_config_value("token")
+    url = config_util.get_config_value("url")
     if not auth_token or not url:
         raise Exception("Auth token and url are required.")
     hostname = urlparse(url).netloc.split(":")[0]
