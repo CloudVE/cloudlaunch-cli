@@ -10,6 +10,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        cloudlaunch=main:client
+        cloudlaunch=cloudlaunch_cli.main:client
     ''',
 )
