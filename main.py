@@ -1,9 +1,16 @@
+import configparser
 import json
+from os.path import expanduser
+from urllib.parse import urlparse
 
 import click
 from coreapi import Client
 from coreapi import transports
 
+def get_config_value(name):
+    config = configparser.ConfigParser()
+    config.read(expanduser("~/.cloudlaunch"))
+    return config['cloudlaunch-cli'].get(name, None) if 'cloudlaunch-cli' in config else None
 
 @click.group()
 def client():
@@ -17,13 +24,30 @@ def config():
 @click.argument('name')
 @click.argument('value')
 def set_config(name, value):
-    # TODO: implement
-    pass
+    """Set a configuration value.
+
+    \b
+    Configuration names include:
+    - url: the URL of CloudLaunch server (e.g., https://beta.launch.usegalaxy.org)
+    - token: an auth token for authenticating with the CloudLaunch API. See
+      documentation for how to obtain an auth token
+    """
+    config = configparser.ConfigParser()
+    config.read(expanduser("~/.cloudlaunch"))
+    if 'cloudlaunch-cli' not in config:
+        config['cloudlaunch-cli'] = {}
+    config['cloudlaunch-cli'][name] = value
+    with open(expanduser("~/.cloudlaunch"), 'w') as configfile:
+        config.write(configfile)
 
 @click.command()
 def show_config():
-    # TODO: implement
-    pass
+    config = configparser.ConfigParser()
+    config.read(expanduser("~/.cloudlaunch"))
+    if 'cloudlaunch-cli' not in config:
+        return
+    for name, value in config['cloudlaunch-cli'].items():
+        print("{name}={value}".format(name=name, value=value))
 
 @click.group()
 def deployments():
@@ -37,14 +61,17 @@ def deployments():
 @click.option('--config-app', type=click.File('rb'), help='JSON application config file')
 def create_deployment(name, application, cloud, application_version, config_app):
     # TODO: if application_version not specified then fetch the default version and use that instead
-    # TODO: load token and URL from config
     # TODO: move coreapi Client instantiation to separate function
-    auth_token = ''
+    auth_token = get_config_value("token")
+    url = get_config_value("url")
+    if not auth_token or not url:
+        raise Exception("Auth token and url are required.")
+    hostname = urlparse(url).netloc.split(":")[0]
     custom_transports = [
-        transports.HTTPTransport(credentials={'localhost': 'Token {}'.format(auth_token)})
+        transports.HTTPTransport(credentials={hostname: 'Token {}'.format(auth_token)})
     ]
     client = Client(transports=custom_transports)
-    document = client.get('http://localhost:8000/api/v1/schema/')
+    document = client.get('{url}/api/v1/schema/'.format(url=url))
     deploy_params = {
         'name': name,
         'application': application,
