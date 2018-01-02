@@ -5,7 +5,9 @@ import click
 from coreapi import Client
 from coreapi import transports
 
-from . import config_util
+from .config import Configuration
+
+conf = Configuration()
 
 
 @click.group()
@@ -28,11 +30,13 @@ def set_config(name, value):
     - token: an auth token for authenticating with the CloudLaunch API. See
       documentation for how to obtain an auth token
     """
-    config_util.set_config_value(name, value)
+    if name not in dir(conf):
+        raise click.BadParameter("{name} is not a recognized config parameter".format(name=name))
+    setattr(conf, name, value)
 
 @click.command()
 def show_config():
-    for name, value in config_util.get_config_values().items():
+    for name, value in conf.asdict().items():
         print("{name}={value}".format(name=name, value=value))
 
 @click.group()
@@ -48,8 +52,8 @@ def deployments():
 def create_deployment(name, application, cloud, application_version, config_app):
     # TODO: if application_version not specified then fetch the default version and use that instead
     # TODO: move coreapi Client instantiation to separate function
-    auth_token = config_util.get_config_value("token")
-    url = config_util.get_config_value("url")
+    auth_token = conf.token
+    url = conf.url
     if not auth_token or not url:
         raise Exception("Auth token and url are required.")
     hostname = urlparse(url).netloc.split(":")[0]
