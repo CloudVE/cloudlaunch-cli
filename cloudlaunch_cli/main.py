@@ -1,10 +1,6 @@
-import json
-from urllib.parse import urlparse
-
 import click
-from coreapi import Client
-from coreapi import transports
 
+from .client import Client
 from .config import Configuration
 
 conf = Configuration()
@@ -51,26 +47,8 @@ def deployments():
 @click.option('--config-app', type=click.File('rb'), help='JSON application config file')
 def create_deployment(name, application, cloud, application_version, config_app):
     # TODO: if application_version not specified then fetch the default version and use that instead
-    # TODO: move coreapi Client instantiation to separate function
-    auth_token = conf.token
-    url = conf.url
-    if not auth_token or not url:
-        raise Exception("Auth token and url are required.")
-    hostname = urlparse(url).netloc.split(":")[0]
-    custom_transports = [
-        transports.HTTPTransport(credentials={hostname: 'Token {}'.format(auth_token)})
-    ]
-    client = Client(transports=custom_transports)
-    document = client.get('{url}/api/v1/schema/'.format(url=url))
-    deploy_params = {
-        'name': name,
-        'application': application,
-        'target_cloud': cloud,
-        'application_version': application_version,
-    }
-    if config_app:
-        deploy_params['config_app'] = json.loads(config_app.read())
-    new_deployment = client.action(document, ['deployments', 'create'], params=deploy_params)
+    client = Client(conf)
+    new_deployment = client.create_deployment(name, application, cloud, application_version, config_app)
     print(new_deployment)
 
 client.add_command(deployments)
