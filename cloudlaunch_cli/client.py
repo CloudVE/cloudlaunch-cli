@@ -1,16 +1,17 @@
-
 import json
 from urllib.parse import urlparse
 
 import coreapi
 
 
-class Client(object):
+class CloudLaunchClient(object):
+    """Wrapper around coreapi client to CloudLaunch REST API."""
 
     def __init__(self, configuration):
         self.configuration = configuration
 
-    def create_deployment(self, name, application, cloud, application_version, config_app=None):
+    def create_deployment(self, name, application, cloud, application_version,
+                          config_app=None):
 
         deploy_params = {
             'name': name,
@@ -21,7 +22,14 @@ class Client(object):
         if config_app:
             deploy_params['config_app'] = json.loads(config_app.read())
         document = self._create_client()
-        return self._client.action(document, ['deployments', 'create'], params=deploy_params)
+        return self._client.action(document, ['deployments', 'create'],
+                                   params=deploy_params)
+
+    def list_deployments(self, archived=False):
+
+        document = self._create_client()
+        return self._client.action(document, ['deployments', 'list'],
+                                   params={'archived': archived})
 
     def _create_client(self):
         url = self.configuration.url
@@ -30,8 +38,8 @@ class Client(object):
             raise Exception("Auth token and url are required.")
         hostname = urlparse(url).netloc.split(":")[0]
         custom_transports = [
-            coreapi.transports.HTTPTransport(credentials={hostname: 'Token {}'.format(auth_token)})
+            coreapi.transports.HTTPTransport(
+                credentials={hostname: 'Token {}'.format(auth_token)})
         ]
         self._client = coreapi.Client(transports=custom_transports)
         return self._client.get('{url}/api/v1/schema/'.format(url=url))
-

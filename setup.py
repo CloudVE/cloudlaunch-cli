@@ -7,6 +7,7 @@ setup(
     install_requires=[
         'Click',
         'coreapi == 2.2.3',
+        'arrow==0.12.0',
     ],
     entry_points='''
         [console_scripts]
