@@ -42,4 +42,4 @@ class CloudLaunchClient(object):
                 credentials={hostname: 'Token {}'.format(auth_token)})
         ]
         self._client = coreapi.Client(transports=custom_transports)
-        return self._client.get('{url}/api/v1/schema/'.format(url=url))
+        return self._client.get('{url}/schema/'.format(url=url))

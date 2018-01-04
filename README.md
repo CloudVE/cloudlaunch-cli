@@ -12,9 +12,9 @@ CLI client for CloudLaunch
     ```
     pip install git+https://github.com/CloudVE/cloudlaunch-cli.git#egg=cloudlaunch-cli
     ```
-3. The CloudLaunch CLI requires two config settings. First is the URL:
+3. The CloudLaunch CLI requires two config settings. First is the URL of the API root:
     ```
-    cloudlaunch config set url https://beta.launch.usegalaxy.org
+    cloudlaunch config set url https://beta.launch.usegalaxy.org/cloudlaunch/api/v1
     ```
 4. Second config setting is an auth token. To get an auth token, first log into
 CloudLaunch, for example, by going to https://beta.launch.usegalaxy.org/login.

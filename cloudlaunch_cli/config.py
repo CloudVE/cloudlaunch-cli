@@ -3,6 +3,7 @@ from os.path import expanduser
 from urllib.parse import urlparse
 
 SECTION = 'cloudlaunch-cli'
+API_URL_ROOT = 'api/v1'
 
 
 class Configuration(object):
@@ -13,14 +14,29 @@ class Configuration(object):
 
     @property
     def url(self):
+        """
+        URL with the full path to the REST API root.
+
+        This URL is of the form:
+        "scheme://domain.name(:port)/path/to/{API_URL_ROOT}"
+        """.format(API_URL_ROOT=API_URL_ROOT)
         return self._get_config_value("url")
 
     @url.setter
     def url(self, value):
         url_parsed = urlparse(value)
-        if not url_parsed.scheme or not url_parsed.netloc:
-            raise Exception("URL is not in the required format: scheme://domain.name(:port)")
-        self._set_config_value("url", "{scheme}://{netloc}".format(**url_parsed._asdict()))
+        scheme = url_parsed.scheme
+        netloc = url_parsed.netloc
+        path = url_parsed.path
+        if not scheme or not netloc or not path \
+                or API_URL_ROOT not in path:
+            raise Exception("URL is not in the required format: "
+                            "scheme://domain.name(:port)/path/to/"
+                            + API_URL_ROOT)
+        # Strip off any part of the path after the API URL root
+        updated_path = path[0:path.find(API_URL_ROOT)] + API_URL_ROOT
+        self._set_config_value("url", "{scheme}://{netloc}{path}".format(
+            scheme=scheme, netloc=netloc, path=updated_path))
 
     @property
     def token(self):

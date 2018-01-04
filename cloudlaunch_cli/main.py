@@ -27,14 +27,18 @@ def set_config(name, value):
     \b
     Configuration names include:
     - url: the URL of CloudLaunch server
-      (e.g., https://beta.launch.usegalaxy.org)
+      (e.g., https://beta.launch.usegalaxy.org/cloudlaunch/api/v1)
     - token: an auth token for authenticating with the CloudLaunch API. See
       documentation for how to obtain an auth token
     """
     if name not in dir(conf):
         raise click.BadParameter("{name} is not a recognized "
                                  "config parameter".format(name=name))
-    setattr(conf, name, value)
+    try:
+        setattr(conf, name, value)
+    except Exception as e:
+        raise click.BadParameter("Unable to set {name}: {error}".format(
+            name=name, error=e))
 
 
 @click.command()
