@@ -58,7 +58,8 @@ class Configuration(object):
             self._config.write(configfile)
 
     def _get_config_value(self, name):
-        return self._config[SECTION].get(name, None) if SECTION in self._config else None
+        return self._config[SECTION].get(name, None) \
+            if SECTION in self._config else None
 
     def _set_config_value(self, name, value):
         if SECTION not in self._config:

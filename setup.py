@@ -26,12 +26,13 @@ REQS_TEST = ([
 
 REQS_DEV = ([
     'sphinx>=1.3.1',
-    'bumpversion>=0.5.3'] + REQS_TEST
+    'bumpversion>=0.5.3',
+    'twine'] + REQS_TEST
 )
 
 setup_requirements = [
     'wheel',
-    'setuptools>=30',
+    'setuptools>=30.0',
 ]
 
 setup(
@@ -63,8 +64,6 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
