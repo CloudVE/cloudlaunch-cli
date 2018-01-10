@@ -11,16 +11,27 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
+REQS_BASE = [
     'Click>=6.0',
-    'coreapi == 2.2.3',
+    'coreapi==2.2.3',
     'arrow==0.12.0',
 ]
 
-setup_requirements = [
-]
+REQS_TEST = ([
+    'tox>=2.9.1',
+    'coverage>=4.4.1',
+    'flake8>=3.4.1',
+    'flake8-import-order>=0.13'] + REQS_BASE
+)
 
-test_requirements = [
+REQS_DEV = ([
+    'sphinx>=1.3.1',
+    'bumpversion>=0.5.3'] + REQS_TEST
+)
+
+setup_requirements = [
+    'wheel',
+    'setuptools>=30',
 ]
 
 setup(
@@ -38,7 +49,11 @@ setup(
         ]
     },
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=REQS_BASE,
+    extras_require={
+        'dev': REQS_DEV,
+        'test': REQS_TEST
+    },
     license="MIT license",
     zip_safe=False,
     keywords='cloudlaunch_cli',
@@ -53,6 +68,6 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=REQS_TEST,
     setup_requires=setup_requirements,
 )
