@@ -6,9 +6,6 @@ CloudLaunch CLI
 .. image:: https://img.shields.io/pypi/v/cloudlaunch_cli.svg
         :target: https://pypi.python.org/pypi/cloudlaunch_cli
 
-.. image:: https://img.shields.io/travis/CloudVE/cloudlaunch_cli.svg
-        :target: https://travis-ci.org/CloudVE/cloudlaunch_cli
-
 .. image:: https://readthedocs.org/projects/cloudlaunch-cli/badge/?version=latest
         :target: https://cloudlaunch-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
