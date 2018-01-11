@@ -73,6 +73,17 @@ Installing for development
 
 Now you can run ``cloudlaunch``.
 
+Release process
+===============
+
+::
+
+    bumpversion patch
+    # or `bumpversion minor` or `bumpversion major`
+    git push
+    git push --tags
+    make release
+
 Credits
 ---------
 
