@@ -37,7 +37,7 @@ setup_requirements = [
 
 setup(
     name='cloudlaunch_cli',
-    version='0.1.0',
+    version='0.1.1',
     description="Command line client to the CloudLaunch API.",
     long_description=readme + '\n\n' + history,
     author="Galaxy and GVL Projects",
