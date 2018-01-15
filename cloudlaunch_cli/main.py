@@ -27,7 +27,7 @@ def set_config(name, value):
     \b
     Configuration names include:
     - url: the URL of CloudLaunch server
-      (e.g., https://beta.launch.usegalaxy.org/cloudlaunch/api/v1)
+      (e.g., https://launch.usegalaxy.org/cloudlaunch/api/v1)
     - token: an auth token for authenticating with the CloudLaunch API. See
       documentation for how to obtain an auth token
     """

@@ -12,7 +12,7 @@ To install CloudLaunch CLI, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install cloudlaunch_cli
+    $ pip install cloudlaunch-cli
 
 This is the preferred method to install CloudLaunch CLI, as it will always install the most recent stable release.
 

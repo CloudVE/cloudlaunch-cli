@@ -31,22 +31,22 @@ Quickstart
        python3 -m venv venv
        source venv/bin/activate
 
-2. Install ``cloudlaunch-cli`` from GitHub
+2. Install ``cloudlaunch-cli`` with pip
    ::
 
-       pip install git+https://github.com/CloudVE/cloudlaunch-cli.git#egg=cloudlaunch-cli
+       pip install cloudlaunch-cli
 
 3. The CloudLaunch CLI requires two config settings. First is the URL of
    the API root:
    ::
 
-       cloudlaunch config set url https://beta.launch.usegalaxy.org/cloudlaunch/api/v1
+       cloudlaunch config set url https://launch.usegalaxy.org/cloudlaunch/api/v1
 
 4. Second config setting is an auth token. To get an auth token, first
    log into CloudLaunch, for example, by going to
-   https://beta.launch.usegalaxy.org/login. Then navigate to the
+   https://launch.usegalaxy.org/login. Then navigate to the
    ``/api/v1/auth/api-auth-token`` API endpoint, for example,
-   https://beta.launch.usegalaxy.org/cloudlaunch/api/v1/auth/api-token-auth/.
+   https://launch.usegalaxy.org/cloudlaunch/api/v1/auth/api-token-auth/.
    Copy the token out of the JSON response and then run the following
    (substituting your own token instead):
    ::
@@ -69,7 +69,7 @@ Installing for development
 
 1. ``python3 -m venv venv``
 2. ``source venv/bin/activate``
-3. ``python setup.py develop``
+3. ``pip install -r requirements_dev.txt``
 
 Now you can run ``cloudlaunch``.
 
