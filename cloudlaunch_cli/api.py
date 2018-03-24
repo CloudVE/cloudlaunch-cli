@@ -33,6 +33,8 @@ class APIResponse:
             raise Exception("No endpoint for updating instance")
         data = copy.deepcopy(self.data)
         data.update(kwargs)
+        # Remove 'id' item from data dict so it's not specified twice
+        del data['id']
         return self.update_endpoint.update(self.id, **data)
 
     def partial_update(self, **kwargs):
@@ -188,11 +190,12 @@ if __name__ == '__main__':
     # print(dep.data)
 
     # Test updating, not working currently
-    # dep = api_client.deployments.get(20)
-    # print(dep.data)
-    # dep.data['archived'] = True
-    # print(dep.data)
-    # api_client.deployments.update(**dep.data)
+    # dep = api_client.deployments.get(23)
+    # import json
+    # print(json.dumps(dep.data, indent=True))
+    # dep['archived'] = False
+    # print(json.dumps(dep.data, indent=True))
+    # dep.update()
 
     # Test updating
     # api_client.deployments.delete(19)
