@@ -45,6 +45,15 @@ class APIResponse:
             raise Exception("No endpoint for deleting instance")
         return self.update_endpoint.delete(self.id)
 
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
+
+    def __contains__(self, key):
+        return key in self.data
+
 
 class APIEndpoint:
 
@@ -190,3 +199,12 @@ if __name__ == '__main__':
     # Test self-updating
     # dep = api_client.deployments.get(24)
     # dep.delete()
+
+    # Test proxied dictionary access
+    # dep = api_client.deployments.get(23)
+    # print(dep['name'])
+    # dep['name'] = 'updated-name'
+    # print(dep['name'])
+    # print('name' in dep)
+    # print('foo' in dep)
+    # print(dep['application_config']['config_cloudlaunch']['instanceType'])
