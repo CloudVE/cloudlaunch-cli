@@ -1,3 +1,4 @@
+import copy
 import sys
 from urllib.parse import urlparse
 
@@ -22,9 +23,27 @@ class APIClient:
 
 class APIResponse:
 
-    def __init__(self, id, data=None):
+    def __init__(self, id, data=None, update_endpoint=None):
         self.id = id
         self.data = data
+        self.update_endpoint = update_endpoint
+
+    def update(self, **kwargs):
+        if not self.update_endpoint:
+            raise Exception("No endpoint for updating instance")
+        data = copy.deepcopy(self.data)
+        data.update(kwargs)
+        return self.update_endpoint.update(self.id, **data)
+
+    def partial_update(self, **kwargs):
+        if not self.update_endpoint:
+            raise Exception("No endpoint for updating instance")
+        return self.update_endpoint.partial_update(self.id, **kwargs)
+
+    def delete(self):
+        if not self.update_endpoint:
+            raise Exception("No endpoint for deleting instance")
+        return self.update_endpoint.delete(self.id)
 
 
 class APIEndpoint:
@@ -103,7 +122,7 @@ class APIEndpoint:
 
     def _create_response(self, data):
         object_id = data[self.id_field_name]
-        api_response = APIResponse(id=object_id, data=data)
+        api_response = APIResponse(id=object_id, data=data, update_endpoint=self)
         if self.subroutes:
             for k, v in self.subroutes.items():
                 setattr(api_response, k, v(self.api_config, parent_id=object_id, parent_url_kwargs=self.parent_url_kwargs))
@@ -138,7 +157,8 @@ if __name__ == '__main__':
     url = sys.argv[1]
     token = sys.argv[2]
     api_client = APIClient(url=url, token=token)
-    # deployments = api_client.deployments.list(archived=False)
+    #deployments = api_client.deployments.list()
+    #print([d.data for d in deployments])
     # deployment = api_client.deployments.get(deployments[0].data['id'])
     # print(deployment.data)
     # task = deployment.tasks.get(deployment.data['latest_task']['id'])
@@ -167,3 +187,6 @@ if __name__ == '__main__':
 
     # Test updating
     # api_client.deployments.delete(19)
+    # Test self-updating
+    # dep = api_client.deployments.get(24)
+    # dep.delete()
