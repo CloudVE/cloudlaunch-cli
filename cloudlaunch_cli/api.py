@@ -1,3 +1,4 @@
+import abc
 import copy
 import sys
 from urllib.parse import urlparse
@@ -6,7 +7,8 @@ import coreapi
 
 
 class APIConfig:
-    def __init__(self, url=None, token=None):
+    """Config object with needed config values for accessing API."""
+    def __init__(self, url, token):
         self.url = url
         self.token = token
 
@@ -22,6 +24,11 @@ class APIClient:
 
 
 class APIResponse:
+    """Represents response from CloudLaunch API.
+
+    Response data dictionary can be accessed via the "data" attribute or
+    directly on this instance.
+    """
 
     def __init__(self, id, data=None, update_endpoint=None):
         self.id = id
@@ -29,6 +36,7 @@ class APIResponse:
         self.update_endpoint = update_endpoint
 
     def update(self, **kwargs):
+        """Update this instance, applying kwargs to data before updating."""
         if not self.update_endpoint:
             raise Exception("No endpoint for updating instance")
         data = copy.deepcopy(self.data)
@@ -40,6 +48,11 @@ class APIResponse:
         return api_response
 
     def partial_update(self, **kwargs):
+        """Update this instance using the values specified in kwargs.
+
+        NOTE: this doesn't apply any updates that have been made to the data
+        attribute.
+        """
         if not self.update_endpoint:
             raise Exception("No endpoint for updating instance")
         api_response = self.update_endpoint.partial_update(self.id, **kwargs)
@@ -47,6 +60,7 @@ class APIResponse:
         return api_response
 
     def delete(self):
+        """Delete this instance."""
         if not self.update_endpoint:
             raise Exception("No endpoint for deleting instance")
         self.update_endpoint.delete(self.id)
@@ -61,7 +75,72 @@ class APIResponse:
         return key in self.data
 
 
-class APIEndpoint:
+class APIEndpoint(metaclass=abc.ABCMeta):
+    """Interface for CloudLaunch API endpoints."""
+
+    @abc.abstractmethod
+    def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):
+        """Create API Endpoint instance.
+
+        Arguments:
+        api_config -- APIConfig instance
+
+        Keyword arguments:
+        parent_id -- for instances of subroutes that have a parent resource,
+                     this is the id of that parent
+        parent_url_kwargs -- for instances of subroutes that have a parent
+                             resource, a dictionary of that parent resource's
+                             url kwargs
+        """
+        pass
+
+    @abc.abstractmethod
+    def get(self, id, **kwargs):
+        """Get a resource and return an APIResponse."""
+        pass
+
+    @abc.abstractmethod
+    def list(self, **kwargs):
+        """Get a list of resources and return a list of APIResponses."""
+        pass
+
+    @abc.abstractmethod
+    def create(self, **kwargs):
+        """Create a resource and return an APIResponse."""
+        pass
+
+    @abc.abstractmethod
+    def update(self, id, **kwargs):
+        """Update a resource and return an APIResponse."""
+        pass
+
+    @abc.abstractmethod
+    def partial_update(self, id, **kwargs):
+        """Partially update a resource and return an APIResponse.
+
+        For a partial update only the fields that are to be updated need be
+        specified as kwargs.
+        """
+        pass
+
+    @abc.abstractmethod
+    def delete(self, id):
+        """Delete a resource."""
+        pass
+
+    @abc.abstractmethod
+    def add_subroute(self, name, child_endpoint):
+        """Add a subroute to this endpoint.
+
+        Adds an attribute with the given name of an instance of child_endpoint.
+        Also will use this to create an instance of child_endpoint and add to
+        each APIResponse returned, with the id of the APIResponse specified as
+        the parent_id of the child_endpoint instance.
+        """
+        pass
+
+
+class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     path = None
     subroutes = {}
@@ -158,11 +237,16 @@ class APIEndpoint:
         return self._client.get('{url}/schema/'.format(url=url))
 
 
-class Deployments(APIEndpoint):
+# Use CoreAPIBasedAPIEndpoint as the base for all APIEndponts
+class BaseAPIEndpoint(CoreAPIBasedAPIEndpoint):
+    pass
+
+
+class Deployments(BaseAPIEndpoint):
     path = ['deployments']
 
 
-class DeploymentTasks(APIEndpoint):
+class DeploymentTasks(BaseAPIEndpoint):
     path = ['deployments', 'tasks']
     parent_url_kwarg = 'deployment_pk'
 
