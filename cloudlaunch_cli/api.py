@@ -35,17 +35,21 @@ class APIResponse:
         data.update(kwargs)
         # Remove 'id' item from data dict so it's not specified twice
         del data['id']
-        return self.update_endpoint.update(self.id, **data)
+        api_response = self.update_endpoint.update(self.id, **data)
+        self.data = api_response.data
+        return api_response
 
     def partial_update(self, **kwargs):
         if not self.update_endpoint:
             raise Exception("No endpoint for updating instance")
-        return self.update_endpoint.partial_update(self.id, **kwargs)
+        api_response = self.update_endpoint.partial_update(self.id, **kwargs)
+        self.data = api_response.data
+        return api_response
 
     def delete(self):
         if not self.update_endpoint:
             raise Exception("No endpoint for deleting instance")
-        return self.update_endpoint.delete(self.id)
+        self.update_endpoint.delete(self.id)
 
     def __getitem__(self, key):
         return self.data[key]
@@ -98,7 +102,7 @@ class APIEndpoint:
         item = self._client.action(document, self.path + ['create'], params=params)
         return self._create_response(item)
 
-    # TODO: need a notion of writeable fields and only update those
+    # TODO: update isn't working, params are added as url parameters?
     def update(self, id, **kwargs):
         document = self._create_client()
         params = kwargs if kwargs else {}
