@@ -1,6 +1,7 @@
 import abc
 import copy
 import sys
+import types
 from urllib.parse import urlparse
 
 import coreapi
@@ -21,6 +22,13 @@ class APIClient:
         config = APIConfig(url=url, token=token)
         self.deployments = Deployments(config)
         self.deployments.add_subroute('tasks', DeploymentTasks)
+        self.auth = types.SimpleNamespace()
+        self.auth.user = Users(config)
+        self.auth.user.credentials = types.SimpleNamespace()
+        self.auth.user.credentials.aws = AWSCredentials(config)
+        self.auth.user.credentials.openstack = OpenstackCredentials(config)
+        self.auth.user.credentials.azure = AzureCredentials(config)
+        self.auth.user.credentials.gce = GCECredentials(config)
 
 
 class APIResponse:
@@ -239,18 +247,33 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         return self._client.get('{url}/schema/'.format(url=url))
 
 
-# Use CoreAPIBasedAPIEndpoint as the base for all APIEndponts
-class BaseAPIEndpoint(CoreAPIBasedAPIEndpoint):
-    pass
-
-
-class Deployments(BaseAPIEndpoint):
+class Deployments(CoreAPIBasedAPIEndpoint):
     path = ['deployments']
 
 
-class DeploymentTasks(BaseAPIEndpoint):
+class DeploymentTasks(CoreAPIBasedAPIEndpoint):
     path = ['deployments', 'tasks']
     parent_url_kwarg = 'deployment_pk'
+
+
+class Users(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user']
+
+
+class AWSCredentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials', 'aws']
+
+
+class OpenstackCredentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials', 'openstack']
+
+
+class AzureCredentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials', 'azure']
+
+
+class GCECredentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials', 'gce']
 
 
 # Temporary code for testing purposes
