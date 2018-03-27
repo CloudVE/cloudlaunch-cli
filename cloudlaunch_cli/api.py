@@ -188,7 +188,9 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         params[self.id_param_name] = id
         if self.parent_url_kwargs:
             params.update(self.parent_url_kwargs)
-        item = self._client.action(document, self.path + ['update'], params=params)
+        # Turn off validation for update since in general the params include all
+        # of a resource's fields, including ones that are read-only
+        item = self._client.action(document, self.path + ['update'], params=params, validate=False)
         return self._create_response(item)
 
     # TODO: partial_update isn't working, params are added as url parameters?
