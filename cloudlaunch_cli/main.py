@@ -1,11 +1,13 @@
+import json
+
 import arrow
 import click
 
-from .client import CloudLaunchClient
+from .api import APIClient
 from .config import Configuration
 
 conf = Configuration()
-cloudlaunch_client = CloudLaunchClient(conf)
+cloudlaunch_client = APIClient(url=conf.url, token=conf.token)
 
 
 @click.group()
@@ -64,8 +66,10 @@ def create_deployment(name, application, cloud, application_version,
                       config_app):
     # TODO: if application_version not specified then fetch the default version
     # and use that instead
-    new_deployment = cloudlaunch_client.create_deployment(
-        name, application, cloud, application_version, config_app)
+    config_app = json.loads(config_app.read()) if config_app else None
+    new_deployment = cloudlaunch_client.deployments.create(
+        name=name, application=application, target_cloud=cloud,
+        application_version=application_version, config_app=config_app)
     _print_deployments([new_deployment])
 
 
@@ -73,8 +77,8 @@ def create_deployment(name, application, cloud, application_version,
 @click.option('--archived', is_flag=True,
               help='Show only archived deployments')
 def list_deployments(archived):
-    deployments = cloudlaunch_client.list_deployments(archived=archived)
-    _print_deployments(deployments['results'])
+    deployments = cloudlaunch_client.deployments.list(archived=archived)
+    _print_deployments(deployments)
 
 
 def _print_deployments(deployments):
@@ -84,8 +88,8 @@ def _print_deployments(deployments):
     else:
         print("No deployments.")
     for deployment in deployments:
-        created_date = arrow.get(deployment['added'])
-        latest_task = deployment['latest_task']
+        created_date = arrow.get(deployment.data['added'])
+        latest_task = deployment.data['latest_task']
         latest_task_status = latest_task['status']
         if latest_task['action'] == 'HEALTH_CHECK' \
                 and latest_task['status'] == 'SUCCESS':
@@ -94,14 +98,14 @@ def _print_deployments(deployments):
             action=latest_task['action'],
             latest_task_status=latest_task_status)
         ip_address = 'N/A'
-        launch_task = deployment['launch_task']
+        launch_task = deployment.data['launch_task']
         if 'cloudLaunch' in launch_task['result']:
             ip_address = launch_task['result']['cloudLaunch']['publicIP']
         print("{name:24.24s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
                   created_date=created_date.humanize(),
                   latest_task_display=latest_task_display,
-                  ip_address=ip_address, **deployment))
+                  ip_address=ip_address, **deployment.data))
 
 
 client.add_command(deployments)
