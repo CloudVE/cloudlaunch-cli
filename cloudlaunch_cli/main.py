@@ -3,7 +3,7 @@ import json
 import arrow
 import click
 
-from .api import APIClient
+from .api.client import APIClient
 from .config import Configuration
 
 conf = Configuration()
@@ -88,8 +88,8 @@ def _print_deployments(deployments):
     else:
         print("No deployments.")
     for deployment in deployments:
-        created_date = arrow.get(deployment.data['added'])
-        latest_task = deployment.data['latest_task']
+        created_date = arrow.get(deployment.added)
+        latest_task = deployment.latest_task
         latest_task_status = latest_task['status']
         if latest_task['action'] == 'HEALTH_CHECK' \
                 and latest_task['status'] == 'SUCCESS':
@@ -98,14 +98,14 @@ def _print_deployments(deployments):
             action=latest_task['action'],
             latest_task_status=latest_task_status)
         ip_address = 'N/A'
-        launch_task = deployment.data['launch_task']
+        launch_task = deployment.launch_task
         if 'cloudLaunch' in launch_task['result']:
             ip_address = launch_task['result']['cloudLaunch']['publicIP']
         print("{name:24.24s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
                   created_date=created_date.humanize(),
                   latest_task_display=latest_task_display,
-                  ip_address=ip_address, **deployment.data))
+                  ip_address=ip_address, **deployment._data))
 
 
 client.add_command(deployments)
