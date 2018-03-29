@@ -78,6 +78,7 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
     id_param_name = 'id'
     id_field_name = 'id'
     parent_url_kwarg = None
+    resource_type = resources.APIResource
 
     def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):
         self.api_config = api_config
@@ -152,8 +153,8 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     def _create_response(self, data):
         object_id = data[self.id_field_name]
-        api_response = resources.APIResource(id=object_id, data=data,
-                                             update_endpoint=self)
+        api_response = self.resource_type(id=object_id, data=data,
+                                          update_endpoint=self)
         if self.subroutes:
             for k, v in self.subroutes.items():
                 setattr(api_response,
@@ -181,11 +182,13 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
 # query parameter
 class Deployments(CoreAPIBasedAPIEndpoint):
     path = ['deployments']
+    resource_type = resources.Deployment
 
 
 class DeploymentTasks(CoreAPIBasedAPIEndpoint):
     path = ['deployments', 'tasks']
     parent_url_kwarg = 'deployment_pk'
+    resource_type = resources.Task
 
 
 class Users(CoreAPIBasedAPIEndpoint):

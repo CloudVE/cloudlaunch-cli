@@ -90,17 +90,17 @@ def _print_deployments(deployments):
     for deployment in deployments:
         created_date = arrow.get(deployment.added)
         latest_task = deployment.latest_task
-        latest_task_status = latest_task['status']
-        if latest_task['action'] == 'HEALTH_CHECK' \
-                and latest_task['status'] == 'SUCCESS':
-            latest_task_status = latest_task['result']['instance_status']
+        latest_task_status = latest_task.status
+        if latest_task.action == 'HEALTH_CHECK' \
+                and latest_task.status == 'SUCCESS':
+            latest_task_status = latest_task.result['instance_status']
         latest_task_display = "{action}:{latest_task_status}".format(
-            action=latest_task['action'],
+            action=latest_task.action,
             latest_task_status=latest_task_status)
         ip_address = 'N/A'
         launch_task = deployment.launch_task
-        if 'cloudLaunch' in launch_task['result']:
-            ip_address = launch_task['result']['cloudLaunch']['publicIP']
+        if 'cloudLaunch' in launch_task.result:
+            ip_address = launch_task.result['cloudLaunch']['publicIP']
         print("{name:24.24s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
                   created_date=created_date.humanize(),
