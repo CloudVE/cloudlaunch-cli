@@ -170,3 +170,7 @@ class TestDeployment(unittest.TestCase):
         self.deployment._update_endpoint.update.assert_called_with(self.deployment.id, **data)
         self.assertTrue(self.deployment.archived)
         self.assertEqual(updated_data, self.deployment.asdict())
+
+    def test_public_ip(self):
+        """Test public_ip computed property."""
+        self.assertEqual(self.deployment.public_ip, "34.233.71.64")

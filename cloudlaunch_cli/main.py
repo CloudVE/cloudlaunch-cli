@@ -97,10 +97,7 @@ def _print_deployments(deployments):
         latest_task_display = "{action}:{latest_task_status}".format(
             action=latest_task.action,
             latest_task_status=latest_task_status)
-        ip_address = 'N/A'
-        launch_task = deployment.launch_task
-        if 'cloudLaunch' in launch_task.result:
-            ip_address = launch_task.result['cloudLaunch']['publicIP']
+        ip_address = deployment.public_ip if deployment.public_ip else 'N/A'
         print("{name:24.24s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
                   created_date=created_date.humanize(),

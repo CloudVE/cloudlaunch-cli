@@ -15,6 +15,7 @@ class APIResource:
         self._data = self.apply_data_mappings(copy.deepcopy(data))
 
     def apply_data_mappings(self, data):
+        """Subclasses should apply necessary data mappings."""
         return data
 
     def update(self, **kwargs):
@@ -87,6 +88,15 @@ class Deployment(APIResource):
                                    data=data['latest_task'],
                                    update_endpoint=self._update_endpoint.tasks)
         return super().apply_data_mappings(data)
+
+    @property
+    def public_ip(self):
+        """Return public IP address of instance."""
+        launch_task = self.launch_task
+        if launch_task.result and 'cloudLaunch' in launch_task.result:
+            return launch_task.result['cloudLaunch'].get('publicIP', None)
+        else:
+            return None
 
 
 class Task(APIResource):
