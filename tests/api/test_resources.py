@@ -55,31 +55,17 @@ class TestDeployment(unittest.TestCase):
         },
         "tasks": "http://127.0.0.1:4200/api/v1/deployments/26/tasks/",
         "latest_task": {
-            "id": 215,
-            "url": "http://127.0.0.1:4200/api/v1/deployments/26/tasks/215/",
+            "id": 216,
+            "url": "http://127.0.0.1:4200/api/v1/deployments/26/tasks/216/",
             "celery_id": None,
-            "action": "LAUNCH",
+            "action": "HEALTH_CHECK",
             "status": "SUCCESS",
             "result": {
-                "cloudLaunch": {
-                    "keyPair": {
-                        "id": "cloudlaunch_key_pair",
-                        "name": "cloudlaunch_key_pair",
-                        "material": None
-                    },
-                    "securityGroup": {
-                        "id": "sg-ec40da9e",
-                        "name": "cloudlaunch-vm"
-                    },
-                    "instance": {
-                        "id": "i-043d1b4d61e9065b8"
-                    },
-                    "publicIP": "34.233.71.64"
-                }
+                "instance_status": "running"
             },
             "traceback": None,
-            "added": "2018-03-28T13:09:50.638217-04:00",
-            "updated": "2018-03-28T14:10:15.831364-04:00",
+            "added": "2018-03-28T13:16:58.675260-04:00",
+            "updated": "2018-03-28T13:17:01.329800-04:00",
             "deployment": 26
         },
         "launch_task": {
@@ -173,3 +159,12 @@ class TestDeployment(unittest.TestCase):
     def test_public_ip(self):
         """Test public_ip computed property."""
         self.assertEqual(self.deployment.public_ip, "34.233.71.64")
+
+
+class TestTask(TestDeployment):
+
+    def test_instance_status(self):
+        self.assertEqual(self.deployment.latest_task.instance_status,
+                         "running")
+        self.assertEqual(self.deployment.launch_task.instance_status,
+                         None)

@@ -109,4 +109,11 @@ class Deployment(APIResource):
 
 
 class Task(APIResource):
-    pass
+
+    @property
+    def instance_status(self):
+        """Return HEALTH_CHECK instance_status otherwise None."""
+        if self.action == 'HEALTH_CHECK' and self.status == 'SUCCESS':
+            return self.result['instance_status']
+        else:
+            return None

@@ -90,10 +90,8 @@ def _print_deployments(deployments):
     for deployment in deployments:
         created_date = arrow.get(deployment.added)
         latest_task = deployment.latest_task
-        latest_task_status = latest_task.status
-        if latest_task.action == 'HEALTH_CHECK' \
-                and latest_task.status == 'SUCCESS':
-            latest_task_status = latest_task.result['instance_status']
+        latest_task_status = latest_task.instance_status \
+            if latest_task.instance_status else latest_task.status
         latest_task_display = "{action}:{latest_task_status}".format(
             action=latest_task.action,
             latest_task_status=latest_task_status)
