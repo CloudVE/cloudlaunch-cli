@@ -98,6 +98,15 @@ class Deployment(APIResource):
         else:
             return None
 
+    def run_health_check(self):
+        return self.tasks.create(action="HEALTH_CHECK")
+
+    def run_restart(self):
+        return self.tasks.create(action="RESTART")
+
+    def run_delete(self):
+        return self.tasks.create(action="DELETE")
+
 
 class Task(APIResource):
     pass
