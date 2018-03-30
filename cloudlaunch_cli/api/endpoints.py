@@ -59,17 +59,6 @@ class APIEndpoint(metaclass=abc.ABCMeta):
         """Delete a resource."""
         pass
 
-    @abc.abstractmethod
-    def add_subroute(self, name, child_endpoint):
-        """Add a subroute to this endpoint.
-
-        Adds an attribute with the given name of an instance of child_endpoint.
-        Also will use this to create an instance of child_endpoint and add to
-        each APIResource returned, with the id of the APIResource specified as
-        the parent_id of the child_endpoint instance.
-        """
-        pass
-
 
 class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
@@ -79,6 +68,7 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
     id_field_name = 'id'
     parent_url_kwarg = None
     resource_type = resources.APIResource
+    subroutes = {}
 
     def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):
         self.api_config = api_config
@@ -86,6 +76,8 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         # TODO: maybe warn if parent_id is specified but not parent_url_kwarg
         if parent_id and self.parent_url_kwarg:
             self.parent_url_kwargs[self.parent_url_kwarg] = parent_id
+        for name, child_endpoint in self.subroutes.items():
+            setattr(self, name, child_endpoint(self.api_config))
 
     def get(self, id, **kwargs):
         document = self._create_client()
@@ -146,11 +138,6 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
             params.update(self.parent_url_kwargs)
         self._client.action(document, self.path + ['delete'], params=params)
 
-    def add_subroute(self, name, child_endpoint):
-        # TODO: maybe figure out the name from the paths?
-        self.subroutes[name] = child_endpoint
-        setattr(self, name, child_endpoint(self.api_config))
-
     def _create_response(self, data):
         object_id = data[self.id_field_name]
         api_response = self.resource_type(id=object_id, data=data,
@@ -178,17 +165,20 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         return self._client.get('{url}/schema/'.format(url=url))
 
 
+class DeploymentTasks(CoreAPIBasedAPIEndpoint):
+    path = ['deployments', 'tasks']
+    parent_url_kwarg = 'deployment_pk'
+    resource_type = resources.Task
+
+
 # TODO: update(), partial_update() don't work because 'archived' is added as
 # query parameter
 class Deployments(CoreAPIBasedAPIEndpoint):
     path = ['deployments']
     resource_type = resources.Deployment
-
-
-class DeploymentTasks(CoreAPIBasedAPIEndpoint):
-    path = ['deployments', 'tasks']
-    parent_url_kwarg = 'deployment_pk'
-    resource_type = resources.Task
+    subroutes = {
+        'tasks': DeploymentTasks
+    }
 
 
 class Users(CoreAPIBasedAPIEndpoint):

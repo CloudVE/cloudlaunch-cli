@@ -16,7 +16,6 @@ class APIClient:
         # create config object from url and token
         config = APIConfig(url=url, token=token)
         self.deployments = endpoints.Deployments(config)
-        self.deployments.add_subroute('tasks', endpoints.DeploymentTasks)
         self.auth = types.SimpleNamespace()
         self.auth.user = endpoints.Users(config)
         credentials = types.SimpleNamespace()

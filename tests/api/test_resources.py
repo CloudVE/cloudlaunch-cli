@@ -118,7 +118,6 @@ class TestDeployment(unittest.TestCase):
         config = client.APIConfig(url="http://localhost:8000/api/v1",
                                   token="token")
         deployments = endpoints.Deployments(config)
-        deployments.add_subroute('tasks', endpoints.DeploymentTasks)
         self.deployment = resources.Deployment(id=self.DEPLOYMENT_DATA['id'],
                                                data=self.DEPLOYMENT_DATA,
                                                update_endpoint=deployments)
