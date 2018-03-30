@@ -81,6 +81,8 @@ class APIResource:
 class Deployment(APIResource):
 
     def apply_data_mappings(self, data):
+        # TODO: the update_endpoint won't really work here since it doesn't have
+        # the parent_id
         data['launch_task'] = Task(data['launch_task']['id'],
                                    data=data['launch_task'],
                                    update_endpoint=self._update_endpoint.tasks)
