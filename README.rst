@@ -2,6 +2,11 @@
 CloudLaunch CLI
 ===============
 
+.. image:: https://travis-ci.org/CloudVE/cloudlaunch-cli.svg?branch=master
+        :target: https://travis-ci.org/CloudVE/cloudlaunch-cli
+
+.. image:: https://coveralls.io/repos/github/CloudVE/cloudlaunch-cli/badge.svg?branch=master
+        :target: https://coveralls.io/github/CloudVE/cloudlaunch-cli?branch=master
 
 .. image:: https://img.shields.io/pypi/v/cloudlaunch_cli.svg
         :target: https://pypi.python.org/pypi/cloudlaunch_cli
