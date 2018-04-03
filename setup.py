@@ -31,8 +31,7 @@ REQS_DEV = ([
 )
 
 setup_requirements = [
-    'wheel',
-    'setuptools>=30.0',
+    'wheel'
 ]
 
 setup(
