@@ -81,19 +81,14 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     def get(self, id, **kwargs):
         document = self._create_client()
-        params = kwargs if kwargs else {}
-        params[self.id_param_name] = id
-        if self.parent_url_kwargs:
-            params.update(self.parent_url_kwargs)
+        params = self._create_params(id=id, **kwargs)
         item = self._client.action(document, self.path + ['read'],
                                    params=params)
         return self._create_response(item)
 
     def list(self, **kwargs):
         document = self._create_client()
-        params = kwargs if kwargs else {}
-        if self.parent_url_kwargs:
-            params.update(self.parent_url_kwargs)
+        params = self._create_params(**kwargs)
         items = self._client.action(document, self.path + ['list'],
                                     params=params)
         # TODO: return a wrapper that supports pagination
@@ -101,19 +96,14 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     def create(self, **kwargs):
         document = self._create_client()
-        params = kwargs if kwargs else {}
-        if self.parent_url_kwargs:
-            params.update(self.parent_url_kwargs)
+        params = self._create_params(**kwargs)
         item = self._client.action(document, self.path + ['create'],
                                    params=params)
         return self._create_response(item)
 
     def update(self, id, **kwargs):
         document = self._create_client()
-        params = kwargs if kwargs else {}
-        params[self.id_param_name] = id
-        if self.parent_url_kwargs:
-            params.update(self.parent_url_kwargs)
+        params = self._create_params(id=id, **kwargs)
         # Turn off validation for update since in general the params include
         # all of a resource's fields, including ones that are read-only
         item = self._client.action(document, self.path + ['update'],
@@ -122,21 +112,23 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     def partial_update(self, id, **kwargs):
         document = self._create_client()
-        params = kwargs if kwargs else {}
-        params[self.id_param_name] = id
-        if self.parent_url_kwargs:
-            params.update(self.parent_url_kwargs)
+        params = self._create_params(id=id, **kwargs)
         item = self._client.action(document, self.path + ['partial_update'],
                                    params=params)
         return self._create_response(item)
 
     def delete(self, id):
         document = self._create_client()
-        params = {}
-        params[self.id_param_name] = id
+        params = self._create_params(id=id)
+        self._client.action(document, self.path + ['delete'], params=params)
+
+    def _create_params(self, id=None, **kwargs):
+        params = kwargs if kwargs else {}
+        if id:
+            params[self.id_param_name] = id
         if self.parent_url_kwargs:
             params.update(self.parent_url_kwargs)
-        self._client.action(document, self.path + ['delete'], params=params)
+        return params
 
     def _create_response(self, data):
         object_id = data[self.id_field_name]
