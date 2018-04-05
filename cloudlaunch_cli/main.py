@@ -102,8 +102,46 @@ def _print_deployments(deployments):
                   latest_task_display=latest_task_display,
                   ip_address=ip_address, **deployment._data))
 
+@click.group()
+def applications():
+    pass
+
+
+@click.command()
+# TODO: maybe default the name too, same as CloudLaunch UI?
+@click.argument('name')
+@click.argument('summary')
+@click.option('--maintainer', help='Maintainer of app')
+@click.option('--description', help='Description of app')
+def create_application(name, summary, maintainer, description):
+    new_app = cloudlaunch_client.applications.create(
+        name=name, summary=summary, maintainer=maintainer,
+        description=description)
+    _print_applications([new_app])
+
+
+@click.command()
+def list_applications():
+    applications = cloudlaunch_client.applications.list()
+    _print_applications(applications)
+
+
+def _print_applications(applications):
+    if len(applications) > 0:
+        print("{:24s}  {:15s}  {:20s}  {:15s}".format(
+            "Name", "Created Date", "Maintainer", "Summary"))
+    else:
+        print("No applications found.")
+    for app in applications:
+        created_date = arrow.get(app.added)
+        print("{name:24.24s}  {created_date:15.15s}  "
+              "{maintainer:20.20s}  {summary:15.15s}".format(
+                  created_date=created_date.humanize(),
+                  **app._data))
+
 
 client.add_command(deployments)
+client.add_command(applications)
 client.add_command(config)
 
 config.add_command(set_config, name='set')
@@ -111,6 +149,9 @@ config.add_command(show_config, name='show')
 
 deployments.add_command(create_deployment, name='create')
 deployments.add_command(list_deployments, name='list')
+
+applications.add_command(create_application, name='create')
+applications.add_command(list_applications, name='list')
 
 if __name__ == '__main__':
     client()

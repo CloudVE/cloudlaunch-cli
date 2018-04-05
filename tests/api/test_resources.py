@@ -135,7 +135,7 @@ class TestDeployment(unittest.TestCase):
         self.deployment._update_endpoint.update.assert_called_with(self.deployment.id, **data)
         self.assertEqual(self.DEPLOYMENT_DATA, self.deployment.asdict())
 
-    def test_update(self):
+    def test_update_archived(self):
         """Test a update of archived field."""
         # Set up mocked response
         updated_data = copy.deepcopy(self.DEPLOYMENT_DATA)
