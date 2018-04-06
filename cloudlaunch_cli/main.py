@@ -102,6 +102,7 @@ def _print_deployments(deployments):
                   latest_task_display=latest_task_display,
                   ip_address=ip_address, **deployment._data))
 
+
 @click.group()
 def applications():
     pass
@@ -135,7 +136,7 @@ def _print_applications(applications):
     for app in applications:
         created_date = arrow.get(app.added)
         print("{name:24.24s}  {created_date:15.15s}  "
-              "{maintainer:20.20s}  {summary:15.15s}".format(
+              "{maintainer!s:20.20}  {summary!s:30.30}".format(
                   created_date=created_date.humanize(),
                   **app._data))
 
