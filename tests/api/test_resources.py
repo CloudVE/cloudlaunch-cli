@@ -128,11 +128,13 @@ class TestDeployment(unittest.TestCase):
 
     def test_update(self):
         """Test a no-op update and make sure it returns the same values."""
-        self.deployment._update_endpoint.update = Mock(return_value=self.deployment)
+        self.deployment._update_endpoint.update = Mock(
+            return_value=self.deployment)
         data = self.deployment.asdict()
         del data['id']
         self.deployment.update()
-        self.deployment._update_endpoint.update.assert_called_with(self.deployment.id, **data)
+        self.deployment._update_endpoint.update.assert_called_with(
+            self.deployment.id, **data)
         self.assertEqual(self.DEPLOYMENT_DATA, self.deployment.asdict())
 
     def test_update_archived(self):
@@ -142,7 +144,8 @@ class TestDeployment(unittest.TestCase):
         updated_data['archived'] = True
         return_value = resources.Deployment(data=updated_data)
         return_value.register_update_endpoint(self.deployment._update_endpoint)
-        self.deployment._update_endpoint.update = Mock(return_value=return_value)
+        self.deployment._update_endpoint.update = Mock(
+            return_value=return_value)
 
         self.deployment.archived = True
         data = self.deployment.asdict()
@@ -150,7 +153,8 @@ class TestDeployment(unittest.TestCase):
         self.assertTrue(data['archived'])
         self.deployment.update()
         # Verify mock called as expected
-        self.deployment._update_endpoint.update.assert_called_with(self.deployment.id, **data)
+        self.deployment._update_endpoint.update.assert_called_with(
+            self.deployment.id, **data)
         self.assertTrue(self.deployment.archived)
         self.assertEqual(updated_data, self.deployment.asdict())
 
