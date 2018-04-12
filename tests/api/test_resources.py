@@ -104,9 +104,8 @@ class TestDeployment(unittest.TestCase):
         config = client.APIConfig(url="http://localhost:8000/api/v1",
                                   token="token")
         deployments = endpoints.Deployments(config)
-        self.deployment = resources.Deployment(id=self.DEPLOYMENT_DATA['id'],
-                                               data=self.DEPLOYMENT_DATA,
-                                               update_endpoint=deployments)
+        self.deployment = resources.Deployment(data=self.DEPLOYMENT_DATA)
+        self.deployment.register_update_endpoint(deployments)
 
     def test_attribute_proxying(self):
         self.assertFalse(self.deployment.archived)
@@ -141,9 +140,8 @@ class TestDeployment(unittest.TestCase):
         # Set up mocked response
         updated_data = copy.deepcopy(self.DEPLOYMENT_DATA)
         updated_data['archived'] = True
-        return_value = resources.Deployment(
-            id=self.deployment.id, data=updated_data,
-            update_endpoint=self.deployment._update_endpoint)
+        return_value = resources.Deployment(data=updated_data)
+        return_value.register_update_endpoint(self.deployment._update_endpoint)
         self.deployment._update_endpoint.update = Mock(return_value=return_value)
 
         self.deployment.archived = True

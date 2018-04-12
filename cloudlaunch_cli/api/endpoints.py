@@ -59,16 +59,23 @@ class APIEndpoint(metaclass=abc.ABCMeta):
         """Delete a resource."""
         pass
 
+    @abc.abstractmethod
+    def subroutes(self, id):
+        """Create subroute endpoint instances for the given id.
+
+        Returns a dict with APIResource types as keys and APIEndpoint instances
+        as keys.
+        """
+        pass
+
 
 class CoreAPIBasedAPIEndpoint(APIEndpoint):
 
     path = None
-    subroutes = {}
     id_param_name = 'id'
-    id_field_name = 'id'
     parent_url_kwarg = None
     resource_type = resources.APIResource
-    subroutes = {}
+    _subroute_types = None
 
     def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):
         self.api_config = api_config
@@ -76,8 +83,6 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         # TODO: maybe warn if parent_id is specified but not parent_url_kwarg
         if parent_id and self.parent_url_kwarg:
             self.parent_url_kwargs[self.parent_url_kwarg] = parent_id
-        for name, child_endpoint in self.subroutes.items():
-            setattr(self, name, child_endpoint(self.api_config))
 
     def get(self, id, **kwargs):
         document = self._create_client()
@@ -122,6 +127,22 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         params = self._create_params(id=id)
         self._client.action(document, self.path + ['delete'], params=params)
 
+    def subroutes(self, id):
+        # Assume that attributes that are APIEndpoint instances are subroutes
+        if not self._subroute_types:
+            self._subroute_types = {}
+            for name in dir(self):
+                val = getattr(self, name)
+                if isinstance(val, APIEndpoint):
+                    self._subroute_types[val.resource_type] = val.__class__
+        subroutes = {}
+        for resource_type, endpoint_type in self._subroute_types.items():
+            subroutes[resource_type] = endpoint_type(
+                self.api_config,
+                parent_id=id,
+                parent_url_kwargs=self.parent_url_kwargs)
+        return subroutes
+
     def _create_params(self, id=None, **kwargs):
         params = kwargs if kwargs else {}
         if id:
@@ -131,16 +152,8 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         return params
 
     def _create_response(self, data):
-        object_id = data[self.id_field_name]
-        api_response = self.resource_type(id=object_id, data=data,
-                                          update_endpoint=self)
-        if self.subroutes:
-            for k, v in self.subroutes.items():
-                setattr(api_response,
-                        k,
-                        v(self.api_config,
-                          parent_id=object_id,
-                          parent_url_kwargs=self.parent_url_kwargs))
+        api_response = self.resource_type(data)
+        api_response.register_update_endpoint(self)
         return api_response
 
     def _create_client(self):
@@ -168,9 +181,13 @@ class DeploymentTasks(CoreAPIBasedAPIEndpoint):
 class Deployments(CoreAPIBasedAPIEndpoint):
     path = ['deployments']
     resource_type = resources.Deployment
-    subroutes = {
-        'tasks': DeploymentTasks
-    }
+    _tasks = None
+
+    @property
+    def tasks(self):
+        if not self._tasks:
+            self._tasks = DeploymentTasks(self.api_config)
+        return self._tasks
 
 
 class Users(CoreAPIBasedAPIEndpoint):

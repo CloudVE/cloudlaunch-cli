@@ -10,7 +10,9 @@ import coreapi
 class ParentResource(resources.APIResource):
     """Resource class for ParentEndpoint."""
 
-    pass
+    @property
+    def child(self):
+        return self.subroute_for(ChildResource)
 
 
 class ChildResource(resources.APIResource):
@@ -32,9 +34,10 @@ class ParentEndpoint(endpoints.CoreAPIBasedAPIEndpoint):
 
     path = ['parent']
     resource_type = ParentResource
-    subroutes = {
-        'child': ChildEndpoint
-    }
+
+    @property
+    def child(self):
+        return ChildEndpoint(self.api_config)
 
 
 class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
@@ -68,7 +71,7 @@ class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
             document, ['parent', 'read'], params={'id': 12})
         # Verify ParentResource is created with 'child' subroute endpoint
         self._assertParentResourceEqual(
-            parent_12, ParentResource(12, data={'name': 'parent-12'}))
+            parent_12, ParentResource(data={'id': 12, 'name': 'parent-12'}))
         self.assertIsInstance(parent_12.child, ChildEndpoint)
         self.assertEqual(parent_12.child.parent_url_kwargs, {
             'parent_pk': 12
@@ -156,7 +159,7 @@ class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
         self.assertEqual(len(parents), 3)
         for parent in parents:
             self._assertParentResourceEqual(
-                parent, ParentResource(parent.id, data={'name': parent.name}))
+                parent, ParentResource(data={'id': parent.id, 'name': parent.name}))
             self.assertEqual(parent.child.parent_url_kwargs, {
                 'parent_pk': parent.id
             })
@@ -179,7 +182,7 @@ class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
             document, ['parent', 'create'], params={'name': 'parent-12'})
         # Verify ParentResource list
         self._assertParentResourceEqual(
-            parent, ParentResource(12, data={'name': 'parent-12'}))
+            parent, ParentResource(data={'id': 12, 'name': 'parent-12'}))
 
     def test_update(self):
         """Test 'update' method."""
@@ -200,7 +203,7 @@ class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
             params={'id': 12, 'name': 'updated-name'}, validate=False)
         # Verify ParentResource list
         self._assertParentResourceEqual(
-            parent, ParentResource(12, data={'name': 'updated-name'}))
+            parent, ParentResource(data={'id': 12, 'name': 'updated-name'}))
 
     def test_update_on_resource_instance(self):
         """Test 'update' when called on resource instance."""
@@ -255,7 +258,8 @@ class TestCoreAPIBasedAPIEndpoint(unittest.TestCase):
             params={'id': 12, 'name': 'updated-name'})
         # Verify ParentResource list
         self._assertParentResourceEqual(
-            parent, ParentResource(12, data={
+            parent, ParentResource(data={
+                'id': 12,
                 'name': 'updated-name',
                 'email': 'support@example.com'
             }))

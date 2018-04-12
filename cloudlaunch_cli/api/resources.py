@@ -2,21 +2,29 @@ import copy
 
 from . import endpoints
 
+
 class APIResource:
     """Wraps response from CloudLaunch API representing a resource."""
 
+    id_field_name = 'id'
+    # Data mappings ia dict of attribute names to callables that can be called
+    # to convert attribute values into some type. The callable is assumed to
+    # take only one argument.
+    data_mappings = {}
     _id = None
     _data = None
     _update_endpoint = None
 
-    def __init__(self, id, data=None, update_endpoint=None):
-        self._id = id
-        self._update_endpoint = update_endpoint
+    def __init__(self, data=None):
+        self._id = data.get(self.id_field_name)
         # Copy data so updates don't affect the passed in dict
-        self._data = self.apply_data_mappings(copy.deepcopy(data))
+        self._data = self._apply_data_mappings(copy.deepcopy(data))
 
-    def apply_data_mappings(self, data):
+    def _apply_data_mappings(self, data):
         """Subclasses should apply necessary data mappings."""
+        for k, v in self.data_mappings.items():
+            if k in data:
+                data[k] = v(data[k])
         return data
 
     def update(self, **kwargs):
@@ -81,19 +89,40 @@ class APIResource:
                 d[k] = v
         return d
 
+    def register_update_endpoint(self, update_endpoint):
+        """Register endpoint for updating this resource and child resources."""
+        self._update_endpoint = update_endpoint
+        for name, mapped_type in self.data_mappings.items():
+            attr = getattr(self, name)
+            if isinstance(attr, APIResource):
+                attr.register_update_endpoint(self.subroute_for(mapped_type))
+
+    def subroute_for(self, resource_type):
+        """Get a subroute of the update endpoint for given resource type."""
+        return self._update_endpoint.subroutes(self.id).get(resource_type)
+
+
+class Task(APIResource):
+
+    @property
+    def instance_status(self):
+        """Return HEALTH_CHECK instance_status otherwise None."""
+        if self.action == 'HEALTH_CHECK' and self.status == 'SUCCESS':
+            return self.result['instance_status']
+        else:
+            return None
+
 
 class Deployment(APIResource):
 
-    def apply_data_mappings(self, data):
-        # TODO: the update_endpoint won't really work here since it doesn't have
-        # the parent_id
-        data['launch_task'] = Task(data['launch_task']['id'],
-                                   data=data['launch_task'],
-                                   update_endpoint=self._update_endpoint.tasks)
-        data['latest_task'] = Task(data['latest_task']['id'],
-                                   data=data['latest_task'],
-                                   update_endpoint=self._update_endpoint.tasks)
-        return super().apply_data_mappings(data)
+    data_mappings = {
+        'launch_task': Task,
+        'latest_task': Task,
+    }
+
+    @property
+    def tasks(self):
+        return self.subroute_for(Task)
 
     @property
     def public_ip(self):
@@ -112,14 +141,3 @@ class Deployment(APIResource):
 
     def run_delete(self):
         return self.tasks.create(action="DELETE")
-
-
-class Task(APIResource):
-
-    @property
-    def instance_status(self):
-        """Return HEALTH_CHECK instance_status otherwise None."""
-        if self.action == 'HEALTH_CHECK' and self.status == 'SUCCESS':
-            return self.result['instance_status']
-        else:
-            return None
