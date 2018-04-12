@@ -21,8 +21,8 @@ class Configuration(object):
         This URL is of the form:
         "scheme://domain.name(:port)/path/to/{API_URL_ROOT}"
         """.format(API_URL_ROOT=API_URL_ROOT)
-        return self._get_config_value("url",
-                                      os.environ.get('CLOUDLAUNCH_SERVER_URL'))
+        return (os.environ.get('CLOUDLAUNCH_SERVER_URL') or
+                self._get_config_value("url"))
 
     @url.setter
     def url(self, value):
@@ -42,8 +42,8 @@ class Configuration(object):
 
     @property
     def token(self):
-        return self._get_config_value("token",
-                                      os.environ.get('CLOUDLAUNCH_AUTH_TOKEN'))
+        return (os.environ.get('CLOUDLAUNCH_AUTH_TOKEN') or
+                self._get_config_value("token"))
 
     @token.setter
     def token(self, value):
@@ -60,9 +60,9 @@ class Configuration(object):
         with open(expanduser(self._filename), 'w') as configfile:
             self._config.write(configfile)
 
-    def _get_config_value(self, name, default=None):
-        return self._config[SECTION].get(name, default) \
-            if SECTION in self._config else default
+    def _get_config_value(self, name):
+        return self._config[SECTION].get(name) \
+            if SECTION in self._config else None
 
     def _set_config_value(self, name, value):
         if SECTION not in self._config:
