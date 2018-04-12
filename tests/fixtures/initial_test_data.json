@@ -1,0 +1,424 @@
+[
+{
+  "model": "auth.user",
+  "pk": 3000,
+  "fields": {
+    "password": "pbkdf2_sha256$100000$pfjFR7vOrIo2$DfWdWsXHQ+T4D/bOjjQwge3KsoxDkwCjBrvGe8LrbQM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "test_user",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2018-04-09T19:05:40.959Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "272f075f152e59fd5ea55ca2d21728d2bfe37077",
+  "fields": {
+    "user": 3000,
+    "created": "2018-04-09T19:05:41.077Z"
+  }
+},
+{
+  "model": "djcloudbridge.userprofile",
+  "pk": "test_user",
+  "fields": {
+    "user": 3000
+  }
+},
+{
+  "model": "djcloudbridge.credentials",
+  "pk": 11,
+  "fields": {
+    "added": "2017-11-15T03:26:16.880Z",
+    "updated": "2017-11-15T03:26:16.880Z",
+    "name": "aws_dummy_creds",
+    "default": true,
+    "cloud": "amazon-us-east-n-virginia",
+    "user_profile": "test_user"
+  }
+},
+{
+  "model": "djcloudbridge.awscredentials",
+  "pk": 11,
+  "fields": {
+    "access_key": "AKIAJW2XCYO4AF55XFEQ",
+    "secret_key": "duBG5EHH5eD9H/wgqF+nNKB1xRjISTVs9L/DummY"
+  }
+},
+{
+  "model": "djcloudbridge.cloud",
+  "pk": "amazon-ap-sydney",
+  "fields": {
+    "added": "2016-06-26T03:13:18.315Z",
+    "updated": "2017-11-15T09:26:03.344Z",
+    "name": "Amazon AP - Sydney",
+    "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+    "kind": "cloud"
+  }
+},
+{
+  "model": "djcloudbridge.cloud",
+  "pk": "amazon-us-east-n-virginia",
+  "fields": {
+    "added": "2016-06-26T03:08:59.048Z",
+    "updated": "2017-11-15T08:49:03.900Z",
+    "name": "Amazon US East 1 - N. Virginia",
+    "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+    "kind": "cloud"
+  }
+},
+{
+  "model": "djcloudbridge.cloud",
+  "pk": "jetstream",
+  "fields": {
+    "added": "2016-06-28T15:30:29.290Z",
+    "updated": "2017-11-15T18:54:41.055Z",
+    "name": "Jetstream",
+    "access_instructions_url": "https://galaxyproject.org/cloud/jetstream/allocation/#api-access",
+    "kind": "cloud"
+  }
+},
+{
+  "model": "djcloudbridge.cloud",
+  "pk": "nectar",
+  "fields": {
+    "added": "2016-06-26T02:53:50.475Z",
+    "updated": "2017-08-31T13:27:33.438Z",
+    "name": "NeCTAR",
+    "access_instructions_url": "http://vlsci.github.io/lscc_docs/tutorials/gvl_launch/gvl_launch/",
+    "kind": "cloud"
+  }
+},
+{
+  "model": "djcloudbridge.aws",
+  "pk": "amazon-ap-sydney",
+  "fields": {
+    "region_name": "ap-southeast-2",
+    "ec2_endpoint_url": "https://ec2.ap-southeast-2.amazonaws.com",
+    "ec2_is_secure": true,
+    "ec2_validate_certs": true,
+    "s3_endpoint_url": "https://s3.ap-southeast-2.amazonaws.com",
+    "s3_is_secure": true,
+    "s3_validate_certs": true
+  }
+},
+{
+  "model": "djcloudbridge.aws",
+  "pk": "amazon-us-east-n-virginia",
+  "fields": {
+    "region_name": "us-east-1",
+    "ec2_endpoint_url": "https://ec2.us-east-1.amazonaws.com",
+    "ec2_is_secure": true,
+    "ec2_validate_certs": true,
+    "s3_endpoint_url": "https://s3.amazonaws.com",
+    "s3_is_secure": true,
+    "s3_validate_certs": true
+  }
+},
+{
+  "model": "djcloudbridge.openstack",
+  "pk": "jetstream",
+  "fields": {
+    "auth_url": "https://jblb.jetstream-cloud.org:35357/v3",
+    "region_name": "RegionOne",
+    "identity_api_version": "v3.0"
+  }
+},
+{
+  "model": "djcloudbridge.openstack",
+  "pk": "nectar",
+  "fields": {
+    "auth_url": "https://keystone.rc.nectar.org.au:5000/v3/",
+    "region_name": "Melbourne",
+    "identity_api_version": "v3.0"
+  }
+},
+{
+  "model": "cloudlaunch.image",
+  "pk": 12,
+  "fields": {
+    "added": "2016-06-29T08:18:34.792Z",
+    "updated": "2017-01-24T12:19:16.349Z",
+    "name": "Ubuntu 16.04",
+    "image_id": "dd8c8969-5e4f-4482-9097-c5a896bc46f8",
+    "description": "Ubuntu 16.04 Xenial"
+  }
+},
+{
+  "model": "cloudlaunch.image",
+  "pk": 14,
+  "fields": {
+    "added": "2016-12-23T15:05:05.395Z",
+    "updated": "2017-11-22T17:11:51.600Z",
+    "name": "Ubuntu 16.04",
+    "image_id": "3e2cfdd5-f726-4535-b035-26f72917aa96",
+    "description": "https://jblb.jetstream-cloud.org/dashboard/project/ngdetails/OS::Glance::Image/9b3a67a2-2c0e-4d6d-af64-90d66e6312e1"
+  }
+},
+{
+  "model": "cloudlaunch.image",
+  "pk": 15,
+  "fields": {
+    "added": "2017-01-03T20:21:08.039Z",
+    "updated": "2017-01-06T04:39:59.117Z",
+    "name": "Ubuntu 16.04 with Docker",
+    "image_id": "ami-54fd1842",
+    "description": ""
+  }
+},
+{
+  "model": "cloudlaunch.image",
+  "pk": 101,
+  "fields": {
+    "added": "2017-12-04T20:39:06.536Z",
+    "updated": "2017-12-12T17:58:13.849Z",
+    "name": "GVL 4.3.0 RC 1",
+    "image_id": "ami-ebadc791",
+    "description": "GVL Image 4.3.0 based on Ubuntu 16.04 - 20171212b1"
+  }
+},
+{
+  "model": "cloudlaunch.cloudimage",
+  "pk": 12,
+  "fields": {
+    "cloud": "nectar"
+  }
+},
+{
+  "model": "cloudlaunch.cloudimage",
+  "pk": 14,
+  "fields": {
+    "cloud": "jetstream"
+  }
+},
+{
+  "model": "cloudlaunch.cloudimage",
+  "pk": 15,
+  "fields": {
+    "cloud": "amazon-us-east-n-virginia"
+  }
+},
+{
+  "model": "cloudlaunch.cloudimage",
+  "pk": 101,
+  "fields": {
+    "cloud": "amazon-us-east-n-virginia"
+  }
+},
+{
+  "model": "cloudlaunch.application",
+  "pk": "cloudman-20",
+  "fields": {
+    "added": "2017-06-19T22:55:20.860Z",
+    "updated": "2017-12-22T21:44:06.592Z",
+    "name": "CloudMan 2.0",
+    "status": "DEV",
+    "summary": "An all-new version of CloudMan",
+    "maintainer": "enis.afgan@jhu.edu",
+    "description": "This appliance will launch a new version of CloudMan - at the moment, this is purely for development purposes and the application has no useful features yet.",
+    "info_url": "https://docs.google.com/presentation/d/1h9PVEGdVIHEat_JWTjYZWuU1R23IeGlMW8PZd8yJVuE/edit#slide=id.p",
+    "icon_url": "https://i.imgur.com/4cJu1lC.png",
+    "default_launch_config": "",
+    "default_version": 24,
+    "display_order": 10000,
+    "category": []
+  }
+},
+{
+  "model": "cloudlaunch.application",
+  "pk": "genomics-virtual-lab",
+  "fields": {
+    "added": "2016-06-26T02:30:40.098Z",
+    "updated": "2017-12-22T21:40:14.762Z",
+    "name": "Genomics Virtual Lab",
+    "status": "LIVE",
+    "summary": "A versatile genomics workbench with Galaxy, RStudio and Jupyter.",
+    "maintainer": "GVL Team",
+    "description": "The Genomics Virtual Laboratory takes the IT out of Bioinformatics. It lets Biologists use a suite of genomics analysis tools that currently often require specialist assistance. The tools provided by the GVL can help you with creating an elastic compute cluster on the cloud and running your analyses on that cluster. The GVL can also help you with protocols and tutorials for common analysis problems.",
+    "info_url": "https://genome.edu.au/",
+    "icon_url": "http://melbournebioinformatics.github.io/MelBioInf_docs/tutorials/assembly/media/gvl_logo.jpg",
+    "default_launch_config": "{\r\n   \"config_gvl\": {\r\n      \"config_cloudman\": {\r\n         \"masterPostStartScript\": \"file:///opt/gvl/scripts/triggers;file:///mnt/galaxy/gvl/poststart.d\",\r\n         \"cluster_templates\": [\r\n            {\r\n               \"name\": \"Galaxy\",\r\n               \"filesystem_templates\": [\r\n                  {\r\n                     \"name\": \"galaxy\",\r\n                     \"roles\": \"galaxyTools,galaxyData\"\r\n                  },\r\n                  {\r\n                     \"name\": \"galaxyIndices\",\r\n                     \"roles\": \"galaxyIndices\"\r\n                  }\r\n               ]\r\n            },\r\n            {\r\n               \"name\": \"Data\",\r\n               \"filesystem_templates\": [\r\n                  {\r\n                     \"type\": \"volume\",\r\n                     \"name\": \"galaxy\"\r\n                  }\r\n               ]\r\n            }\r\n         ]\r\n      }\r\n   },\r\n   \"config_cloudlaunch\": {\r\n       \"instanceType\": \"m1.medium\",\r\n      \"provider_settings\": {\r\n         \"ebsOptimised\": true\r\n       },\r\n       \"firewall\": [\r\n          {\r\n             \"securityGroup\": \"cloudlaunch-gvl\",\r\n             \"rules\": [\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"80\",\r\n                   \"to\": \"80\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"20\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"22\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"30000\",\r\n                   \"to\": \"30100\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"1\",\r\n                   \"to\": \"65535\",\r\n                   \"cidr\": \"0.0.0.0/0\",\r\n                   \"src_group\": \"cloudlaunch\"\r\n                }\r\n             ]\r\n          }\r\n       ]\r\n    }\r\n}",
+    "default_version": 31,
+    "display_order": 1000,
+    "category": []
+  }
+},
+{
+  "model": "cloudlaunch.application",
+  "pk": "ubuntu",
+  "fields": {
+    "added": "2016-06-27T22:10:17.212Z",
+    "updated": "2017-12-22T21:38:44.060Z",
+    "name": "Ubuntu",
+    "status": "LIVE",
+    "summary": "Ubuntu operating system",
+    "maintainer": "Canonical Inc.",
+    "description": "Ubuntu is a Debian-based Linux operating system and distribution for personal computers, smartphones and network servers. This appliance is a bare-bones version of this operating system.",
+    "info_url": "https://en.wikipedia.org/wiki/Ubuntu_(operating_system)",
+    "icon_url": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo-ubuntu_no%28r%29-black_orange-hex.svg?download",
+    "default_launch_config": "",
+    "default_version": 5,
+    "display_order": 1030,
+    "category": []
+  }
+},
+{
+  "model": "cloudlaunch.applicationversion",
+  "pk": 5,
+  "fields": {
+    "application": "ubuntu",
+    "version": "16.04",
+    "frontend_component_path": "app/marketplace/plugins/plugins.module#PluginsModule",
+    "frontend_component_name": "clui-ubuntu-config",
+    "backend_component_name": "cloudlaunch.backend_plugins.base_vm_app.BaseVMAppPlugin",
+    "default_launch_config": "",
+    "default_cloud": "jetstream"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversion",
+  "pk": 24,
+  "fields": {
+    "application": "cloudman-20",
+    "version": "dev",
+    "frontend_component_path": "app/marketplace/plugins/plugins.module#PluginsModule",
+    "frontend_component_name": "clui-ubuntu-config",
+    "backend_component_name": "cloudlaunch.backend_plugins.cloudman2_app.CloudMan2AppPlugin",
+    "default_launch_config": "{\r\n   \"config_cloudman\": {},\r\n   \"config_cloudlaunch\": {\r\n       \"instanceType\": \"m1.tiny\",\r\n       \"firewall\": [\r\n          {\r\n             \"securityGroup\": \"cloudlaunch-cm2\",\r\n             \"rules\": [\r\n               {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"22\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"8080\",\r\n                   \"to\": \"8080\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"1\",\r\n                   \"to\": \"65535\",\r\n                   \"src_group\": \"CloudLaunch\"\r\n                }\r\n             ]\r\n          }\r\n       ]\r\n    }\r\n}",
+    "default_cloud": "jetstream"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversion",
+  "pk": 31,
+  "fields": {
+    "application": "genomics-virtual-lab",
+    "version": "GVL 4.3.0",
+    "frontend_component_path": "app/marketplace/plugins/plugins.module#PluginsModule",
+    "frontend_component_name": "clui-gvl-config",
+    "backend_component_name": "cloudlaunch.backend_plugins.gvl_app.GVLAppPlugin",
+    "default_launch_config": "",
+    "default_cloud": "amazon-us-east-n-virginia"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversioncloudconfig",
+  "pk": 11,
+  "fields": {
+    "application_version": 5,
+    "cloud": "nectar",
+    "image": 12,
+    "default_instance_type": "",
+    "default_launch_config": "{\r\n   \"config_cloudlaunch\": {\r\n       \"instanceType\": \"m1.small\",\r\n       \"firewall\": [\r\n          {\r\n             \"securityGroup\": \"cloudlaunch-vm\",\r\n             \"rules\": [\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"80\",\r\n                   \"to\": \"80\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"22\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"20\",\r\n                   \"to\": \"21\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"30000\",\r\n                   \"to\": \"30100\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                }\r\n             ]\r\n          }\r\n       ]\r\n    }\r\n}"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversioncloudconfig",
+  "pk": 13,
+  "fields": {
+    "application_version": 5,
+    "cloud": "jetstream",
+    "image": 14,
+    "default_instance_type": null,
+    "default_launch_config": "{\r\n   \"config_cloudlaunch\": {\r\n        \"instanceType\": \"m1.tiny\",\r\n       \"firewall\": [\r\n          {\r\n             \"securityGroup\": \"cloudlaunch-vm\",\r\n             \"rules\": [\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"80\",\r\n                   \"to\": \"80\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"22\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                }\r\n             ]\r\n          }\r\n       ]\r\n    }\r\n}"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversioncloudconfig",
+  "pk": 7,
+  "fields": {
+    "application_version": 5,
+    "cloud": "amazon-us-east-n-virginia",
+    "image": 15,
+    "default_instance_type": "",
+    "default_launch_config": "{\r\n   \"config_cloudlaunch\": {\r\n       \"instanceType\": \"t2.small\",\r\n       \"firewall\": [\r\n          {\r\n             \"securityGroup\": \"cloudlaunch-vm\",\r\n             \"rules\": [\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"80\",\r\n                   \"to\": \"80\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                },\r\n                {\r\n                   \"protocol\": \"tcp\",\r\n                   \"from\": \"22\",\r\n                   \"to\": \"22\",\r\n                   \"cidr\": \"0.0.0.0/0\"\r\n                }\r\n             ]\r\n          }\r\n       ]\r\n    }\r\n}"
+  }
+},
+{
+  "model": "cloudlaunch.applicationversioncloudconfig",
+  "pk": 48,
+  "fields": {
+    "application_version": 24,
+    "cloud": "jetstream",
+    "image": 14,
+    "default_instance_type": "m1.tiny",
+    "default_launch_config": ""
+  }
+},
+{
+  "model": "cloudlaunch.applicationversioncloudconfig",
+  "pk": 84,
+  "fields": {
+    "application_version": 31,
+    "cloud": "amazon-us-east-n-virginia",
+    "image": 101,
+    "default_instance_type": null,
+    "default_launch_config": "{\r\n   \"config_gvl\": {\r\n      \"config_cloudman\": {\r\n         \"masterPostStartScript\": \"file:///opt/gvl/scripts/triggers;file:///mnt/galaxy/gvl/poststart.d\",\r\n         \"defaultBucket\": \"cloudman-gvl-430\",\r\n         \"storageType\": \"volume\",\r\n         \"storageSize\": 100,\r\n         \"clusterType\": \"Galaxy\",\r\n         \"gvl_config\": { \"install\" : [\"gvl_cmdline_utilities\"] },\r\n         \"cluster_templates\": [\r\n            {\r\n               \"name\": \"Galaxy\",\r\n               \"filesystem_templates\": [\r\n                  {\r\n                     \"data_source\": \"archive\",\r\n                     \"archive_md5\": \"7c252fd983b52fcc358c62895b22eed4\",\r\n                     \"name\": \"galaxy\",\r\n                     \"roles\": \"galaxyTools,galaxyData\",\r\n                     \"type\": \"volume\",\r\n                     \"size\": 62,\r\n                     \"archive_url\": \"https://s3.amazonaws.com/cloudman-gvl-430/filesystems/gvl-galaxyfs-4.3.0.tar.gz\"\r\n                  },\r\n                 {\r\n                    \"name\": \"galaxyIndices\",\r\n                    \"roles\": \"galaxyIndices\",\r\n                    \"type\": \"cvmfs\",\r\n                    \"mount_point\": \"/cvmfs/data.galaxyproject.org\"\r\n                 }\r\n               ]\r\n            }\r\n         ]\r\n      },\r\n      \"gvl_cmdline_utilities\": true,\r\n      \"gvl_package_registry_url\": \"https://swift.rc.nectar.org.au:8888/v1/AUTH_377/cloudman-gvl-430/packages/package_registry.yml\"\r\n   },\r\n   \"config_cloudlaunch\": {\r\n       \"instanceType\": \"c5.large\"\r\n    }\r\n}"
+  }
+},
+{
+  "model": "public_appliances.location",
+  "pk": 6,
+  "fields": {
+    "latitude": -37.8139,
+    "longitude": 144.9634,
+    "city": "Melbourne",
+    "country": "AU"
+  }
+},
+{
+  "model": "public_appliances.location",
+  "pk": 7,
+  "fields": {
+    "latitude": 30.384,
+    "longitude": -97.7073,
+    "city": "Austin",
+    "country": "US"
+  }
+},
+{
+  "model": "public_appliances.publicservice",
+  "pk": "galaxy-main",
+  "fields": {
+    "added": "2016-06-29T08:07:39.252Z",
+    "updated": "2016-06-29T08:17:55.123Z",
+    "name": "Galaxy Main",
+    "links": "http://usegalaxy.org/",
+    "location": 7,
+    "purpose": "The Galaxy Project free public server; biomedical research",
+    "comments": "Strong on genomics; good central repository for shared Galaxy objects. See Main for more.",
+    "email_user_support": "clements@galaxyproject.org",
+    "quotas": "Registered users: 250GB, Unregistered  users: 5GB",
+    "featured": false,
+    "logo": "https://wiki.galaxyproject.org/Images/GalaxyLogos?action=AttachFile&do=get&target=galaxy_logo_25percent_transparent.png",
+    "sponsors": [],
+    "tags": []
+  }
+},
+{
+  "model": "public_appliances.publicservice",
+  "pk": "genomics-virtual-lab-melbourne",
+  "fields": {
+    "added": "2016-06-29T08:06:35.204Z",
+    "updated": "2016-06-29T08:06:35.204Z",
+    "name": "Genomics Virtual Lab Melbourne",
+    "links": "http://galaxy-mel.genome.edu.au/",
+    "location": 6,
+    "purpose": "This Galaxy service is maintained by the Life Sciences Computation Centre at the VLSCI",
+    "comments": "We provide this Galaxy instance to:\r\nprovide bioinformatics infrastructure to the Melbourne life sciences community\r\ngive researchers tools to do their own analysis\r\nhelp improve general bioinformatics skills\r\nprovide a platform for tutorials and other training",
+    "email_user_support": "help@genome.edu.au",
+    "quotas": "Registered users: 100GB, Unregistered users: 50MB",
+    "featured": false,
+    "logo": "https://www.vlsci.org.au/sites/all/themes/vlsci/images/bg-logo.gif",
+    "sponsors": [],
+    "tags": []
+  }
+}
+]
