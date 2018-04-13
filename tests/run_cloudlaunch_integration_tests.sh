@@ -34,9 +34,13 @@ while ! nc -z localhost 8000; do
 done
 
 # Run cloudlaunch-cli test suite against cloudlaunch
-CLOUDLAUNCH_SERVER_URL=http://localhost:8000/api/v1 CLOUDLAUNCH_AUTH_TOKEN=272f075f152e59fd5ea55ca2d21728d2bfe37077 coverage run --source cloudlaunch_cli --branch setup.py test
+coverage run --source cloudlaunch_cli --branch setup.py test
+# Cache return value of tests
+ret_value=$?
 
 # Kill the django process afterwards ($! is the last background process).
 # There's a special SIGINT handler in manage.py that will terminate cloudlaunch
 # gracefully, so coverage has a chance to write out its report
 kill -SIGINT $!
+
+exit $ret_value
