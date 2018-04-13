@@ -145,43 +145,23 @@ class Deployment(APIResource):
 
 class Application(APIResource):
 
-    def apply_data_mappings(self, data):
+    def _apply_data_mappings(self, data):
         # TODO: the update_endpoint won't really work here since it doesn't
         #  have the parent_id
-        data['versions'] = [ApplicationVersion(
-                                version['version'],
-                                data=version,
-                                update_endpoint=None)
+        data['versions'] = [ApplicationVersion(data=version)
                             for version in data.get('versions')]
-        return super().apply_data_mappings(data)
+        return super()._apply_data_mappings(data)
 
 
 class ApplicationVersion(APIResource):
 
-    def apply_data_mappings(self, data):
+    def _apply_data_mappings(self, data):
         # TODO: the update_endpoint won't really work here since it doesn't
         #  have the parent_id
         data['cloud_config'] = \
-            [ApplicationVersionCloudConfig(
-                cloud_config['cloud'],
-                data=cloud_config,
-                update_endpoint=None)
+            [ApplicationVersionCloudConfig(data=cloud_config)
              for cloud_config in data.get('cloud_config')]
-        return super().apply_data_mappings(data)
-
-
-class ApplicationVersionCloudConfig(APIResource):
-
-    def apply_data_mappings(self, data):
-        # TODO: the update_endpoint won't really work here since it doesn't
-        #  have the parent_id
-        data['cloud'] = Cloud(data['cloud']['slug'],
-                              data=data['cloud'],
-                              update_endpoint=None)
-        data['image'] = Image(data['image']['name'],
-                              data=data['image'],
-                              update_endpoint=None)
-        return super().apply_data_mappings(data)
+        return super()._apply_data_mappings(data)
 
 
 class Cloud(APIResource):
@@ -190,3 +170,11 @@ class Cloud(APIResource):
 
 class Image(APIResource):
     pass
+
+
+class ApplicationVersionCloudConfig(APIResource):
+
+    data_mappings = {
+        'cloud': Cloud,
+        'image': Image,
+    }
