@@ -1,0 +1,22 @@
+{  
+   "config_app":{  
+      "config_cloudlaunch":{  
+         "vmType":"m1.tiny",
+         "rootStorageType":"instance",
+         "placementZone":null,
+         "keyPair":null,
+         "network":null,
+         "subnet":null,
+         "gateway":null,
+         "staticIP":null,
+         "customImageID":null,
+         "provider_settings":{  
+            "ebsOptimised":null,
+            "volumeIOPS":null
+         }
+      },
+      "config_ubuntu":{  
+
+      }
+   }
+}

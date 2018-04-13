@@ -50,7 +50,7 @@ Quickstart
 4. Second config setting is an auth token. To get an auth token, first
    log into CloudLaunch, for example, by going to
    https://launch.usegalaxy.org/login. Then navigate to the
-   ``/api/v1/auth/api-auth-token`` API endpoint, for example,
+   ``/api/v1/auth/api-token-auth`` API endpoint, for example,
    https://launch.usegalaxy.org/cloudlaunch/api/v1/auth/api-token-auth/.
    Copy the token out of the JSON response and then run the following
    (substituting your own token instead):

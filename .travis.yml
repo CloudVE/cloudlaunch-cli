@@ -1,11 +1,12 @@
 sudo: false
 language: python
-python: 3.5
+cache: pip
+python: 3.6
 os:
   - linux
 #  - osx
 env:
-  - TOX_ENV=py35
+  - TOX_ENV=py36
 matrix:
   fast_finish: true
   allow_failures:

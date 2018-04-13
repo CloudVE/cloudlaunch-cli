@@ -1,4 +1,5 @@
 import configparser
+import os
 from os.path import expanduser
 from urllib.parse import urlparse
 
@@ -20,7 +21,8 @@ class Configuration(object):
         This URL is of the form:
         "scheme://domain.name(:port)/path/to/{API_URL_ROOT}"
         """.format(API_URL_ROOT=API_URL_ROOT)
-        return self._get_config_value("url")
+        return (os.environ.get('CLOUDLAUNCH_SERVER_URL') or
+                self._get_config_value("url"))
 
     @url.setter
     def url(self, value):
@@ -40,7 +42,8 @@ class Configuration(object):
 
     @property
     def token(self):
-        return self._get_config_value("token")
+        return (os.environ.get('CLOUDLAUNCH_AUTH_TOKEN') or
+                self._get_config_value("token"))
 
     @token.setter
     def token(self, value):
@@ -58,7 +61,7 @@ class Configuration(object):
             self._config.write(configfile)
 
     def _get_config_value(self, name):
-        return self._config[SECTION].get(name, None) \
+        return self._config[SECTION].get(name) \
             if SECTION in self._config else None
 
     def _set_config_value(self, name, value):

@@ -208,3 +208,10 @@ class AzureCredentials(CoreAPIBasedAPIEndpoint):
 
 class GCECredentials(CoreAPIBasedAPIEndpoint):
     path = ['auth', 'user', 'credentials', 'gce']
+
+
+class Applications(CoreAPIBasedAPIEndpoint):
+    path = ['applications']
+    resource_type = resources.Application
+    id_param_name = 'slug'
+    id_field_name = 'slug'

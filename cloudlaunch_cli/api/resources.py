@@ -141,3 +141,40 @@ class Deployment(APIResource):
 
     def run_delete(self):
         return self.tasks.create(action="DELETE")
+
+
+class Application(APIResource):
+
+    def _apply_data_mappings(self, data):
+        # TODO: the update_endpoint won't really work here since it doesn't
+        #  have the parent_id
+        data['versions'] = [ApplicationVersion(data=version)
+                            for version in data.get('versions')]
+        return super()._apply_data_mappings(data)
+
+
+class ApplicationVersion(APIResource):
+
+    def _apply_data_mappings(self, data):
+        # TODO: the update_endpoint won't really work here since it doesn't
+        #  have the parent_id
+        data['cloud_config'] = \
+            [ApplicationVersionCloudConfig(data=cloud_config)
+             for cloud_config in data.get('cloud_config')]
+        return super()._apply_data_mappings(data)
+
+
+class Cloud(APIResource):
+    pass
+
+
+class Image(APIResource):
+    pass
+
+
+class ApplicationVersionCloudConfig(APIResource):
+
+    data_mappings = {
+        'cloud': Cloud,
+        'image': Image,
+    }
