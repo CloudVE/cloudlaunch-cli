@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Tests for `cloudlaunch_cli` package."""
-
-
+import os
 import unittest
 
 from click.testing import CliRunner
@@ -20,8 +19,11 @@ class TestCloudlaunch_cli(unittest.TestCase):
     def tearDown(self):
         """Tear down test fixtures, if any."""
 
-    def test_000_something(self):
-        """Test something."""
+    def _get_test_resource(self, filename):
+        return os.path.join(self._get_test_resource_path(), filename)
+
+    def _get_test_resource_path(self):
+        return os.path.join(os.path.dirname(__file__), 'fixtures/')
 
     def test_command_line_interface(self):
         """Test the CLI."""
@@ -32,3 +34,28 @@ class TestCloudlaunch_cli(unittest.TestCase):
         help_result = runner.invoke(cloudlaunch_cli.main.client, ['--help'])
         assert help_result.exit_code == 0
         assert '--help  Show this message and exit.' in help_result.output
+
+    def test_list_applications(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["applications", "list"])
+        assert result.exit_code == 0
+        # Verify result columns are in list output
+        assert 'Genomics Virtual Lab' in result.output
+        assert 'CloudLaunch integration' in result.output
+        assert 'cloudve.org' in result.output
+        assert 'An app that uses mock drivers' in result.output
+
+    def test_create_deployments(self):
+        """Test creating a deployment via the CLI"""
+        runner = CliRunner()
+        result = runner.invoke(
+            cloudlaunch_cli.main.client,
+            args=["deployments", "create", "cli-test-app", "cl_test_app",
+                  "amazon-us-east-n-virginia",
+                  "--application-version", "16.04",
+                  "--config-app",
+                  self._get_test_resource("app_cfg_ubuntu.json")])
+        assert result.exit_code == 0
+        assert('cli-test-app' in result.output)
