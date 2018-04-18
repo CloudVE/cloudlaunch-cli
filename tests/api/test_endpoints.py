@@ -1,5 +1,6 @@
 
 import unittest
+import unittest.mock
 
 from cloudlaunch_cli.api import client, endpoints, resources
 

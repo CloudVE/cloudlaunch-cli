@@ -24,7 +24,10 @@ class APIResource:
         """Subclasses should apply necessary data mappings."""
         for k, v in self.data_mappings.items():
             if k in data:
-                data[k] = v(data[k])
+                if isinstance(data[k], list):
+                    data[k] = [v(item) for item in data[k]]
+                else:
+                    data[k] = v(data[k])
         return data
 
     def update(self, **kwargs):
@@ -143,27 +146,6 @@ class Deployment(APIResource):
         return self.tasks.create(action="DELETE")
 
 
-class Application(APIResource):
-
-    def _apply_data_mappings(self, data):
-        # TODO: the update_endpoint won't really work here since it doesn't
-        #  have the parent_id
-        data['versions'] = [ApplicationVersion(data=version)
-                            for version in data.get('versions')]
-        return super()._apply_data_mappings(data)
-
-
-class ApplicationVersion(APIResource):
-
-    def _apply_data_mappings(self, data):
-        # TODO: the update_endpoint won't really work here since it doesn't
-        #  have the parent_id
-        data['cloud_config'] = \
-            [ApplicationVersionCloudConfig(data=cloud_config)
-             for cloud_config in data.get('cloud_config')]
-        return super()._apply_data_mappings(data)
-
-
 class Cloud(APIResource):
     pass
 
@@ -177,4 +159,16 @@ class ApplicationVersionCloudConfig(APIResource):
     data_mappings = {
         'cloud': Cloud,
         'image': Image,
+    }
+
+
+class ApplicationVersion(APIResource):
+    data_mappings = {
+        'cloud_config': ApplicationVersionCloudConfig
+    }
+
+
+class Application(APIResource):
+    data_mappings = {
+        'versions': ApplicationVersion
     }
