@@ -172,3 +172,4 @@ class Application(APIResource):
     data_mappings = {
         'versions': ApplicationVersion
     }
+    id_field_name = 'slug'
