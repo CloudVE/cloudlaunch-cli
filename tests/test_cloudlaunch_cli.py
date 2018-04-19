@@ -40,7 +40,8 @@ class TestCloudlaunch_cli(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(cloudlaunch_cli.main.client,
                                args=["applications", "list"])
-        assert result.exit_code == 0
+        self.assertEqual(result.exit_code, 0,
+                         msg="listing applications failed: " + result.output)
         # Verify result columns are in list output
         assert 'Genomics Virtual Lab' in result.output
         assert 'CloudLaunch integration' in result.output
