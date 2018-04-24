@@ -25,6 +25,8 @@ class APIClient:
         credentials.azure = endpoints.AzureCredentials(config)
         credentials.gce = endpoints.GCECredentials(config)
         self.auth.user.credentials = credentials
+        self.infrastructure = types.SimpleNamespace()
+        self.infrastructure.clouds = endpoints.Clouds(config)
 
 
 # For testing purposes only

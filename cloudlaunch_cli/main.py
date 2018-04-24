@@ -141,8 +141,36 @@ def _print_applications(applications):
                   **app._data))
 
 
+@click.group()
+def clouds():
+    pass
+
+
+@click.command()
+def list_clouds():
+    clouds = cloudlaunch_client.infrastructure.clouds.list()
+    _print_clouds(clouds)
+
+
+def _print_clouds(clouds):
+    slug_width = max([len(cloud.slug) for cloud in clouds]) + 1
+    if len(clouds) > 0:
+        header_format = "{{:{slug_width!s}s}} {{:20s}} {{:12s}} {{:20s}}"\
+                        .format(slug_width=slug_width)
+        print(header_format.format(
+            "Slug", "Name", "Cloud Type", "Region"))
+    else:
+        print("No clouds found.")
+    row_format = "{{slug:{slug_width!s}.{slug_width!s}s}} {{name:20.20s}} "\
+                 "{{cloud_type:12.12}} {{region_name:20.20s}}"\
+                 .format(slug_width=slug_width)
+    for cloud in clouds:
+        print(row_format.format(**cloud.asdict()))
+
+
 client.add_command(deployments)
 client.add_command(applications)
+client.add_command(clouds)
 client.add_command(config)
 
 config.add_command(set_config, name='set')
@@ -153,6 +181,8 @@ deployments.add_command(list_deployments, name='list')
 
 applications.add_command(create_application, name='create')
 applications.add_command(list_applications, name='list')
+
+clouds.add_command(list_clouds, name='list')
 
 if __name__ == '__main__':
     client()

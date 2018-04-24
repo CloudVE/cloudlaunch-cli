@@ -214,3 +214,9 @@ class Applications(CoreAPIBasedAPIEndpoint):
     path = ['applications']
     resource_type = resources.Application
     id_param_name = 'slug'
+
+
+class Clouds(CoreAPIBasedAPIEndpoint):
+    path = ['infrastructure', 'clouds']
+    resource_type = resources.Cloud
+    id_param_name = 'slug'
