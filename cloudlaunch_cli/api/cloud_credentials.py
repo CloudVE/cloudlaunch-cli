@@ -14,9 +14,22 @@ class CloudCredentials(abc.ABC):
         return None
 
     @staticmethod
+    def load_from_dict(cloud_type, creds_dict):
+        """Load a CloudCredentials subclass instance from given dict."""
+        if cloud_type == 'aws':
+            return AWSCredentials.from_dict(creds_dict)
+        return None
+
+    @staticmethod
     @abc.abstractmethod
     def from_environment():
         """Load and return an instance of CloudCredentials using env vars."""
+        pass
+
+    @staticmethod
+    @abc.abstractmethod
+    def from_dict(creds_dict):
+        """Load and return an instance of CloudCredentials from given dict."""
         pass
 
     @abc.abstractmethod
@@ -36,6 +49,15 @@ class AWSCredentials(CloudCredentials):
     def from_environment():
         aws_access_key = os.environ.get('AWS_ACCESS_KEY')
         aws_secret_key = os.environ.get('AWS_SECRET_KEY')
+        if aws_access_key and aws_secret_key:
+            return AWSCredentials(aws_access_key, aws_secret_key)
+        else:
+            return None
+
+    @staticmethod
+    def from_dict(creds_dict):
+        aws_access_key = creds_dict.get('aws_access_key')
+        aws_secret_key = creds_dict.get('aws_secret_key')
         if aws_access_key and aws_secret_key:
             return AWSCredentials(aws_access_key, aws_secret_key)
         else:

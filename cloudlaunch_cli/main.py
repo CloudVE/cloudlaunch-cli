@@ -9,6 +9,8 @@ from .config import Configuration
 
 conf = Configuration()
 
+cli_context = {}
+
 
 def create_api_client(cloud=None, cloud_credentials_json=None):
 
@@ -16,8 +18,15 @@ def create_api_client(cloud=None, cloud_credentials_json=None):
     # Recreate client with cloud credentials if available
     if cloud:
         cloud_resource = cloudlaunch_client.infrastructure.clouds.get(cloud)
-        cloud_creds = CloudCredentials.load_from_environment(
-            cloud_resource.cloud_type)
+        # Try to load if specified on command line first, then look in
+        # environment variables
+        if 'cloud-credentials' in cli_context:
+            creds_dict = json.loads(cli_context['cloud-credentials'].read())
+            cloud_creds = CloudCredentials.load_from_dict(
+                cloud_resource.cloud_type, creds_dict)
+        else:
+            cloud_creds = CloudCredentials.load_from_environment(
+                cloud_resource.cloud_type)
         if cloud_creds:
             return APIClient(url=conf.url, token=conf.token,
                              cloud_credentials=cloud_creds)
@@ -64,8 +73,18 @@ def show_config():
 
 
 @click.group()
-def deployments():
-    pass
+@click.option('--cloud-credentials', type=click.File('rb'),
+              help="JSON file with cloud credentials.")
+def deployments(cloud_credentials):
+    """Manage CloudLaunch deployments.
+
+    You can pass cloud credentials either as environment variables or as a JSON
+    file.
+    TODO: document the expected names of variables.
+    """
+    global cli_context
+    if cloud_credentials:
+        cli_context['cloud-credentials'] = cloud_credentials
 
 
 @click.command()
