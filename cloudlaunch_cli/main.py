@@ -4,10 +4,24 @@ import arrow
 import click
 
 from .api.client import APIClient
+from .api.cloud_credentials import CloudCredentials
 from .config import Configuration
 
 conf = Configuration()
-cloudlaunch_client = APIClient(url=conf.url, token=conf.token)
+
+
+def create_api_client(cloud=None, cloud_credentials_json=None):
+
+    cloudlaunch_client = APIClient(url=conf.url, token=conf.token)
+    # Recreate client with cloud credentials if available
+    if cloud:
+        cloud_resource = cloudlaunch_client.infrastructure.clouds.get(cloud)
+        cloud_creds = CloudCredentials.load_from_environment(
+            cloud_resource.cloud_type)
+        if cloud_creds:
+            return APIClient(url=conf.url, token=conf.token,
+                             cloud_credentials=cloud_creds)
+    return cloudlaunch_client
 
 
 @click.group()
@@ -67,9 +81,16 @@ def create_deployment(name, application, cloud, application_version,
     # TODO: if application_version not specified then fetch the default version
     # and use that instead
     config_app = json.loads(config_app.read()) if config_app else None
-    new_deployment = cloudlaunch_client.deployments.create(
-        name=name, application=application, target_cloud=cloud,
-        application_version=application_version, config_app=config_app)
+    cloudlaunch_client = create_api_client(cloud)
+    params = {
+        'name': name,
+        'application': application,
+        'target_cloud': cloud,
+        'application_version': application_version
+    }
+    if config_app:
+        params['config_app'] = config_app
+    new_deployment = cloudlaunch_client.deployments.create(**params)
     _print_deployments([new_deployment])
 
 
@@ -77,7 +98,7 @@ def create_deployment(name, application, cloud, application_version,
 @click.option('--archived', is_flag=True,
               help='Show only archived deployments')
 def list_deployments(archived):
-    deployments = cloudlaunch_client.deployments.list(archived=archived)
+    deployments = create_api_client().deployments.list(archived=archived)
     _print_deployments(deployments)
 
 
@@ -115,7 +136,7 @@ def applications():
 @click.option('--maintainer', help='Maintainer of app')
 @click.option('--description', help='Description of app')
 def create_application(name, summary, maintainer, description):
-    new_app = cloudlaunch_client.applications.create(
+    new_app = create_api_client().applications.create(
         name=name, summary=summary, maintainer=maintainer,
         description=description)
     _print_applications([new_app])
@@ -123,7 +144,7 @@ def create_application(name, summary, maintainer, description):
 
 @click.command()
 def list_applications():
-    applications = cloudlaunch_client.applications.list()
+    applications = create_api_client().applications.list()
     _print_applications(applications)
 
 
@@ -148,7 +169,7 @@ def clouds():
 
 @click.command()
 def list_clouds():
-    clouds = cloudlaunch_client.infrastructure.clouds.list()
+    clouds = create_api_client().infrastructure.clouds.list()
     _print_clouds(clouds)
 
 
