@@ -18,6 +18,10 @@ class CloudCredentials(abc.ABC):
             return AWSCredentials.from_environment()
         elif cloud_type == 'gce':
             return GCECredentials.from_environment()
+        elif cloud_type == 'openstack':
+            return OpenStackCredentials.from_environment()
+        elif cloud_type == 'azure':
+            return AzureCredentials.from_environment()
         return None
 
     @staticmethod
@@ -27,6 +31,10 @@ class CloudCredentials(abc.ABC):
             return AWSCredentials.from_dict(creds_dict)
         elif cloud_type == 'gce':
             return GCECredentials.from_dict(creds_dict)
+        elif cloud_type == 'openstack':
+            return OpenStackCredentials.from_dict(creds_dict)
+        elif cloud_type == 'azure':
+            return AzureCredentials.from_dict(creds_dict)
         return None
 
     @staticmethod
@@ -123,3 +131,135 @@ class GCECredentials(CloudCredentials):
             return json.loads(value)
         except Exception as e:
             return None
+
+
+class OpenStackCredentials(CloudCredentials):
+    """CloudCredentials subclass representing OpenStack credentials."""
+
+    def __init__(self, os_username, os_password, os_project_name=None,
+                 os_project_domain_name=None, os_user_domain_name=None):
+        self.os_username = os_username
+        self.os_password = os_password
+        self.os_project_name = os_project_name
+        self.os_project_domain_name = os_project_domain_name
+        self.os_user_domain_name = os_user_domain_name
+
+    @staticmethod
+    def from_environment():
+        os_username = os.environ.get('OS_USERNAME')
+        os_password = os.environ.get('OS_PASSWORD')
+        if os_username and os_password:
+            os_project_name = os.environ.get('OS_PROJECT_NAME')
+            os_project_domain_name = os.environ.get('OS_PROJECT_DOMAIN_NAME')
+            os_user_domain_name = os.environ.get('OS_USER_DOMAIN_NAME')
+            return OpenStackCredentials(
+                os_username, os_password,
+                os_project_name=os_project_name,
+                os_project_domain_name=os_project_domain_name,
+                os_user_domain_name=os_user_domain_name)
+        else:
+            return None
+
+    @staticmethod
+    def from_dict(creds_dict):
+        os_username = creds_dict.get('os_username')
+        os_password = creds_dict.get('os_password')
+        if os_username and os_password:
+            os_project_name = creds_dict.get('os_project_name')
+            os_project_domain_name = creds_dict.get('os_project_domain_name')
+            os_user_domain_name = creds_dict.get('os_user_domain_name')
+            return OpenStackCredentials(
+                os_username, os_password,
+                os_project_name=os_project_name,
+                os_project_domain_name=os_project_domain_name,
+                os_user_domain_name=os_user_domain_name)
+        else:
+            return None
+
+    def to_http_headers(self):
+        http_headers = {
+            'cl-os-username': self.os_username,
+            'cl-os-password': self.os_password,
+        }
+        if self.os_project_name:
+            http_headers['cl-os-project-name'] = self.os_project_name
+        if self.os_project_domain_name:
+            http_headers['cl-os-project-domain-name'] =\
+                self.os_project_domain_name
+        if self.os_user_domain_name:
+            http_headers['cl-os-user-domain-name'] = self.os_user_domain_name
+        return http_headers
+
+
+class AzureCredentials(CloudCredentials):
+    """CloudCredentials subclass representing Azure credentials."""
+
+    def __init__(self, azure_subscription_id, azure_client_id, azure_secret,
+                 azure_tenant, azure_resource_group=None,
+                 azure_storage_account=None, azure_vm_default_username=None):
+        self.azure_subscription_id = azure_subscription_id
+        self.azure_client_id = azure_client_id
+        self.azure_secret = azure_secret
+        self.azure_tenant = azure_tenant
+        self.azure_resource_group = azure_resource_group
+        self.azure_storage_account = azure_storage_account
+        self.azure_vm_default_username = azure_vm_default_username
+
+    @staticmethod
+    def from_environment():
+        azure_subscription_id = os.environ.get('AZURE_SUBSCRIPTION_ID')
+        azure_client_id = os.environ.get('AZURE_CLIENT_ID')
+        azure_secret = os.environ.get('AZURE_SECRET')
+        azure_tenant = os.environ.get('AZURE_TENANT')
+        if azure_subscription_id and azure_client_id and azure_secret\
+                and azure_tenant:
+            azure_resource_group = os.environ.get('AZURE_RESOURCE_GROUP')
+            azure_storage_account = os.environ.get('AZURE_STORAGE_ACCOUNT')
+            azure_vm_default_username = \
+                os.environ.get('AZURE_VM_DEFAULT_USERNAME')
+            return AzureCredentials(
+                azure_subscription_id, azure_client_id,
+                azure_secret, azure_tenant,
+                azure_resource_group=azure_resource_group,
+                azure_storage_account=azure_storage_account,
+                azure_vm_default_username=azure_vm_default_username)
+        else:
+            return None
+
+    @staticmethod
+    def from_dict(creds_dict):
+        azure_subscription_id = creds_dict.get('azure_subscription_id')
+        azure_client_id = creds_dict.get('azure_client_id')
+        azure_secret = creds_dict.get('azure_secret')
+        azure_tenant = os.environ.get('azure_tenant')
+        if azure_subscription_id and azure_client_id and azure_secret\
+                and azure_tenant:
+            azure_resource_group = os.environ.get('azure_resource_group')
+            azure_storage_account = creds_dict.get('azure_storage_account')
+            azure_vm_default_username = \
+                creds_dict.get('azure_vm_default_username')
+            return AzureCredentials(
+                azure_subscription_id, azure_client_id,
+                azure_secret, azure_tenant,
+                azure_resource_group=azure_resource_group,
+                azure_storage_account=azure_storage_account,
+                azure_vm_default_username=azure_vm_default_username)
+        else:
+            return None
+
+    def to_http_headers(self):
+        http_headers = {
+            'cl-azure-subscription-id': self.azure_subscription_id,
+            'cl-azure-client-id': self.azure_client_id,
+            'cl-azure-secret': self.azure_secret,
+            'cl-azure-tenant': self.azure_tenant,
+        }
+        if self.azure_resource_group:
+            http_headers['cl-azure-resource-group'] = self.azure_resource_group
+        if self.azure_storage_account:
+            http_headers['cl-azure-storage-account'] = \
+                self.azure_storage_account
+        if self.azure_vm_default_username:
+            http_headers['cl-azure-vm-default-username'] = \
+                self.azure_vm_default_username
+        return http_headers
