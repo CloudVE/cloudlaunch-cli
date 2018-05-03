@@ -162,9 +162,13 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         if not auth_token or not url:
             raise Exception("Auth token and url are required.")
         hostname = urlparse(url).netloc.split(":")[0]
+        http_headers = {}
+        if self.api_config.cloud_credentials:
+            http_headers = self.api_config.cloud_credentials.to_http_headers()
         custom_transports = [
             coreapi.transports.HTTPTransport(
-                credentials={hostname: 'Token {}'.format(auth_token)})
+                credentials={hostname: 'Token {}'.format(auth_token)},
+                headers=http_headers)
         ]
         self._client = coreapi.Client(transports=custom_transports)
         return self._client.get('{url}/schema/'.format(url=url))
@@ -213,4 +217,10 @@ class GCECredentials(CoreAPIBasedAPIEndpoint):
 class Applications(CoreAPIBasedAPIEndpoint):
     path = ['applications']
     resource_type = resources.Application
+    id_param_name = 'slug'
+
+
+class Clouds(CoreAPIBasedAPIEndpoint):
+    path = ['infrastructure', 'clouds']
+    resource_type = resources.Cloud
     id_param_name = 'slug'

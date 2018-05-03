@@ -5,16 +5,19 @@ from . import endpoints
 
 class APIConfig:
     """Config object with needed config values for accessing API."""
-    def __init__(self, url, token):
+    def __init__(self, url, token, cloud_credentials=None):
         self.url = url
         self.token = token
+        # cloud_credentials is a dict
+        self.cloud_credentials = cloud_credentials
 
 
 class APIClient:
 
-    def __init__(self, url=None, token=None):
-        # create config object from url and token
-        config = APIConfig(url=url, token=token)
+    def __init__(self, url=None, token=None, cloud_credentials=None):
+        # create config object from url and token (and optionally, credentials)
+        config = APIConfig(url=url, token=token,
+                           cloud_credentials=cloud_credentials)
         self.deployments = endpoints.Deployments(config)
         self.applications = endpoints.Applications(config)
         self.auth = types.SimpleNamespace()
@@ -25,6 +28,8 @@ class APIClient:
         credentials.azure = endpoints.AzureCredentials(config)
         credentials.gce = endpoints.GCECredentials(config)
         self.auth.user.credentials = credentials
+        self.infrastructure = types.SimpleNamespace()
+        self.infrastructure.clouds = endpoints.Clouds(config)
 
 
 # For testing purposes only

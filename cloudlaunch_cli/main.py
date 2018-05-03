@@ -4,10 +4,33 @@ import arrow
 import click
 
 from .api.client import APIClient
+from .api.cloud_credentials import CloudCredentials
 from .config import Configuration
 
 conf = Configuration()
-cloudlaunch_client = APIClient(url=conf.url, token=conf.token)
+
+cli_context = {}
+
+
+def create_api_client(cloud=None, cloud_credentials_json=None):
+
+    cloudlaunch_client = APIClient(url=conf.url, token=conf.token)
+    # Recreate client with cloud credentials if available
+    if cloud:
+        cloud_resource = cloudlaunch_client.infrastructure.clouds.get(cloud)
+        # Try to load if specified on command line first, then look in
+        # environment variables
+        if 'cloud-credentials' in cli_context:
+            creds_dict = json.loads(cli_context['cloud-credentials'].read())
+            cloud_creds = CloudCredentials.load_from_dict(
+                cloud_resource.cloud_type, creds_dict)
+        else:
+            cloud_creds = CloudCredentials.load_from_environment(
+                cloud_resource.cloud_type)
+        if cloud_creds:
+            return APIClient(url=conf.url, token=conf.token,
+                             cloud_credentials=cloud_creds)
+    return cloudlaunch_client
 
 
 @click.group()
@@ -50,8 +73,18 @@ def show_config():
 
 
 @click.group()
-def deployments():
-    pass
+@click.option('--cloud-credentials', type=click.File('rb'),
+              help="JSON file with cloud credentials.")
+def deployments(cloud_credentials):
+    """Manage CloudLaunch deployments.
+
+    You can pass cloud credentials either as environment variables or as a JSON
+    file.
+    TODO: document the expected names of variables.
+    """
+    global cli_context
+    if cloud_credentials:
+        cli_context['cloud-credentials'] = cloud_credentials
 
 
 @click.command()
@@ -67,9 +100,16 @@ def create_deployment(name, application, cloud, application_version,
     # TODO: if application_version not specified then fetch the default version
     # and use that instead
     config_app = json.loads(config_app.read()) if config_app else None
-    new_deployment = cloudlaunch_client.deployments.create(
-        name=name, application=application, target_cloud=cloud,
-        application_version=application_version, config_app=config_app)
+    cloudlaunch_client = create_api_client(cloud)
+    params = {
+        'name': name,
+        'application': application,
+        'target_cloud': cloud,
+        'application_version': application_version
+    }
+    if config_app:
+        params['config_app'] = config_app
+    new_deployment = cloudlaunch_client.deployments.create(**params)
     _print_deployments([new_deployment])
 
 
@@ -77,7 +117,7 @@ def create_deployment(name, application, cloud, application_version,
 @click.option('--archived', is_flag=True,
               help='Show only archived deployments')
 def list_deployments(archived):
-    deployments = cloudlaunch_client.deployments.list(archived=archived)
+    deployments = create_api_client().deployments.list(archived=archived)
     _print_deployments(deployments)
 
 
@@ -115,7 +155,7 @@ def applications():
 @click.option('--maintainer', help='Maintainer of app')
 @click.option('--description', help='Description of app')
 def create_application(name, summary, maintainer, description):
-    new_app = cloudlaunch_client.applications.create(
+    new_app = create_api_client().applications.create(
         name=name, summary=summary, maintainer=maintainer,
         description=description)
     _print_applications([new_app])
@@ -123,7 +163,7 @@ def create_application(name, summary, maintainer, description):
 
 @click.command()
 def list_applications():
-    applications = cloudlaunch_client.applications.list()
+    applications = create_api_client().applications.list()
     _print_applications(applications)
 
 
@@ -141,8 +181,36 @@ def _print_applications(applications):
                   **app._data))
 
 
+@click.group()
+def clouds():
+    pass
+
+
+@click.command()
+def list_clouds():
+    clouds = create_api_client().infrastructure.clouds.list()
+    _print_clouds(clouds)
+
+
+def _print_clouds(clouds):
+    slug_width = max([len(cloud.slug) for cloud in clouds]) + 1
+    if len(clouds) > 0:
+        header_format = "{{:{slug_width!s}s}} {{:20s}} {{:12s}} {{:20s}}"\
+                        .format(slug_width=slug_width)
+        print(header_format.format(
+            "Slug", "Name", "Cloud Type", "Region"))
+    else:
+        print("No clouds found.")
+    row_format = "{{slug:{slug_width!s}.{slug_width!s}s}} {{name:20.20s}} "\
+                 "{{cloud_type:12.12}} {{region_name:20.20s}}"\
+                 .format(slug_width=slug_width)
+    for cloud in clouds:
+        print(row_format.format(**cloud.asdict()))
+
+
 client.add_command(deployments)
 client.add_command(applications)
+client.add_command(clouds)
 client.add_command(config)
 
 config.add_command(set_config, name='set')
@@ -153,6 +221,8 @@ deployments.add_command(list_deployments, name='list')
 
 applications.add_command(create_application, name='create')
 applications.add_command(list_applications, name='list')
+
+clouds.add_command(list_clouds, name='list')
 
 if __name__ == '__main__':
     client()
