@@ -42,7 +42,7 @@ setup(
     author="Galaxy and GVL Projects",
     author_email='help@CloudVE.org',
     url='https://github.com/CloudVE/cloudlaunch_cli',
-    packages=find_packages(include=['cloudlaunch_cli']),
+    packages=find_packages(include=['cloudlaunch_cli', 'cloudlaunch_cli.*']),
     entry_points={
         'console_scripts': [
             'cloudlaunch=cloudlaunch_cli.main:client'
