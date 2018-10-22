@@ -10,7 +10,7 @@ import coreapi
 from . import resources
 
 
-class APIEndpoint():
+class APIEndpoint(object):
     """Interface for CloudLaunch API endpoints."""
 
     __metaclass__ = abc.ABCMeta

@@ -1,7 +1,7 @@
 import copy
 
 
-class APIResource:
+class APIResource(object):
     """Wraps response from CloudLaunch API representing a resource."""
 
     id_field_name = 'id'
