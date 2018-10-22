@@ -13,7 +13,7 @@ from . import resources
 class APIEndpoint():
     """Interface for CloudLaunch API endpoints."""
 
-    __metaclass__ = ABCMeta
+    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):

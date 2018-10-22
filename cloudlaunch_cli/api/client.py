@@ -1,4 +1,7 @@
-import types
+try:
+    from types import SimpleNamespace
+except: # Python 2
+    from argparse import Namespace as SimpleNamespace
 
 from . import endpoints
 
@@ -20,15 +23,15 @@ class APIClient:
                            cloud_credentials=cloud_credentials)
         self.deployments = endpoints.Deployments(config)
         self.applications = endpoints.Applications(config)
-        self.auth = types.SimpleNamespace()
+        self.auth = SimpleNamespace()
         self.auth.user = endpoints.Users(config)
-        credentials = types.SimpleNamespace()
+        credentials = SimpleNamespace()
         credentials.aws = endpoints.AWSCredentials(config)
         credentials.openstack = endpoints.OpenstackCredentials(config)
         credentials.azure = endpoints.AzureCredentials(config)
         credentials.gce = endpoints.GCECredentials(config)
         self.auth.user.credentials = credentials
-        self.infrastructure = types.SimpleNamespace()
+        self.infrastructure = SimpleNamespace()
         self.infrastructure.clouds = endpoints.Clouds(config)
 
 

@@ -1,7 +1,5 @@
 import copy
 
-from . import endpoints
-
 
 class APIResource:
     """Wraps response from CloudLaunch API representing a resource."""
@@ -81,6 +79,7 @@ class APIResource:
 
     def asdict(self):
         """Convert resource into data dictionary."""
+        from . import endpoints
         d = {}
         for k, v in self._data.items():
             # Skip over subroute endpoint instances
