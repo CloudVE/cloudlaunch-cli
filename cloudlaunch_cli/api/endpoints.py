@@ -1,13 +1,19 @@
 import abc
-from urllib.parse import urlparse
+
+try:
+    from urllib.parse import urlparse
+except ImportError:  # python 2
+    from urlparse import urlparse
 
 import coreapi
 
 from . import resources
 
 
-class APIEndpoint(metaclass=abc.ABCMeta):
+class APIEndpoint():
     """Interface for CloudLaunch API endpoints."""
+
+    __metaclass__ = ABCMeta
 
     @abc.abstractmethod
     def __init__(self, api_config, parent_id=None, parent_url_kwargs=None):
