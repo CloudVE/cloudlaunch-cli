@@ -177,7 +177,8 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
                 headers=http_headers)
         ]
         self._client = coreapi.Client(transports=custom_transports)
-        return self._client.get('{url}/schema/'.format(url=url))
+        url = url if url and url.endswith("/") else url + "/"
+        return self._client.get('{url}schema/'.format(url=url))
 
 
 class DeploymentTasks(CoreAPIBasedAPIEndpoint):
