@@ -29,7 +29,9 @@ class TestCloudlaunch_cli(unittest.TestCase):
         """Test the CLI."""
         runner = CliRunner()
         result = runner.invoke(cloudlaunch_cli.main.client)
-        assert result.exit_code == 0
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="invoking cli failed: " + str(result.exception))
         assert 'Usage: client [OPTIONS] COMMAND [ARGS]' in result.output
         help_result = runner.invoke(cloudlaunch_cli.main.client, ['--help'])
         assert help_result.exit_code == 0
@@ -40,8 +42,9 @@ class TestCloudlaunch_cli(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(cloudlaunch_cli.main.client,
                                args=["applications", "list"])
-        self.assertEqual(result.exit_code, 0,
-                         msg="listing applications failed: " + result.output)
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing apps failed: " + str(result.exception))
         # Verify result columns are in list output
         assert 'Genomics Virtual Lab' in result.output
         assert 'CloudLaunch integration' in result.output
@@ -58,5 +61,7 @@ class TestCloudlaunch_cli(unittest.TestCase):
                   "--application-version", "16.04",
                   "--config-app",
                   self._get_test_resource("app_cfg_ubuntu.json")])
-        assert result.exit_code == 0
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="create deployment failed: " + str(result.exception))
         assert('cli-test-app' in result.output)
