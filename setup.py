@@ -8,8 +8,8 @@ from setuptools import find_packages, setup
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('CHANGELOG.rst') as changelog_file:
-    changelog = changelog_file.read()
+with open('HISTORY.rst') as history_file:
+    history = history_file.read()
 
 REQS_BASE = [
     'Click>=6.0',
@@ -38,7 +38,7 @@ setup(
     name='cloudlaunch_cli',
     version='0.2.0',
     description="Command line client to the CloudLaunch API.",
-    long_description=readme + '\n\n' + changelog,
+    long_description=readme + '\n\n' + history,
     author="Galaxy and GVL Projects",
     author_email='help@CloudVE.org',
     url='https://github.com/CloudVE/cloudlaunch_cli',
