@@ -29,7 +29,7 @@ class APIClient:
         credentials.aws = endpoints.AWSCredentials(config)
         credentials.openstack = endpoints.OpenstackCredentials(config)
         credentials.azure = endpoints.AzureCredentials(config)
-        credentials.gce = endpoints.GCECredentials(config)
+        credentials.gcp = endpoints.GCPCredentials(config)
         self.auth.user.credentials = credentials
         self.infrastructure = SimpleNamespace()
         self.infrastructure.clouds = endpoints.Clouds(config)

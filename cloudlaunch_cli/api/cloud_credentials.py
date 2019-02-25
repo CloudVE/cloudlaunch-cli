@@ -16,8 +16,8 @@ class CloudCredentials(abc.ABC):
         """Load a CloudCredentials subclass instance from env vars."""
         if cloud_type == 'aws':
             return AWSCredentials.from_environment()
-        elif cloud_type == 'gce':
-            return GCECredentials.from_environment()
+        elif cloud_type == 'gcp':
+            return GCPCredentials.from_environment()
         elif cloud_type == 'openstack':
             return OpenStackCredentials.from_environment()
         elif cloud_type == 'azure':
@@ -29,8 +29,8 @@ class CloudCredentials(abc.ABC):
         """Load a CloudCredentials subclass instance from given dict."""
         if cloud_type == 'aws':
             return AWSCredentials.from_dict(creds_dict)
-        elif cloud_type == 'gce':
-            return GCECredentials.from_dict(creds_dict)
+        elif cloud_type == 'gcp':
+            return GCPCredentials.from_dict(creds_dict)
         elif cloud_type == 'openstack':
             return OpenStackCredentials.from_dict(creds_dict)
         elif cloud_type == 'azure':
@@ -87,7 +87,7 @@ class AWSCredentials(CloudCredentials):
         }
 
 
-class GCECredentials(CloudCredentials):
+class GCPCredentials(CloudCredentials):
     """CloudCredentials subclass representing AWS credentials."""
 
     def __init__(self, creds_dict):
@@ -95,34 +95,34 @@ class GCECredentials(CloudCredentials):
 
     @staticmethod
     def from_environment():
-        gce_credentials_json = os.environ.get('GCE_CREDENTIALS_JSON')
+        gcp_credentials_json = os.environ.get('GCP_CREDENTIALS_JSON')
 
         creds_dict = None
-        if gce_credentials_json:
+        if gcp_credentials_json:
             try:
                 # Try to read as JSON string first, then try as a file path
-                creds_dict = GCECredentials._safe_load_json(
-                    gce_credentials_json)
+                creds_dict = GCPCredentials._safe_load_json(
+                    gcp_credentials_json)
                 if not creds_dict:
-                    gce_credentials_json_path = Path(gce_credentials_json)
-                    if gce_credentials_json_path.exists():
-                        with gce_credentials_json_path.open() as f:
+                    gcp_credentials_json_path = Path(gcp_credentials_json)
+                    if gcp_credentials_json_path.exists():
+                        with gcp_credentials_json_path.open() as f:
                             creds_dict = json.loads(f.read())
             except Exception as e:
-                log.error("Unable to read GCE_CREDENTIALS_JSON: " + str(e),
+                log.error("Unable to read GCP_CREDENTIALS_JSON: " + str(e),
                           exc_info=e)
         if creds_dict:
-            return GCECredentials(creds_dict)
+            return GCPCredentials(creds_dict)
         else:
             return None
 
     @staticmethod
     def from_dict(creds_dict):
-        return GCECredentials(creds_dict)
+        return GCPCredentials(creds_dict)
 
     def to_http_headers(self):
         return {
-            'cl-gce-credentials-json': json.dumps(self.creds_dict),
+            'cl-gcp-credentials-json': json.dumps(self.creds_dict),
         }
 
     @staticmethod
