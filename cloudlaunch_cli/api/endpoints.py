@@ -217,8 +217,8 @@ class AzureCredentials(CoreAPIBasedAPIEndpoint):
     path = ['auth', 'user', 'credentials', 'azure']
 
 
-class GCECredentials(CoreAPIBasedAPIEndpoint):
-    path = ['auth', 'user', 'credentials', 'gce']
+class GCPCredentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials', 'gcp']
 
 
 class Applications(CoreAPIBasedAPIEndpoint):
