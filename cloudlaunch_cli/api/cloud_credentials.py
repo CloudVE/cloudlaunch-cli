@@ -14,26 +14,26 @@ class CloudCredentials(abc.ABC):
     @staticmethod
     def load_from_environment(cloud_type):
         """Load a CloudCredentials subclass instance from env vars."""
-        if cloud_type == 'aws':
+        if cloud_type == 'AWSCloud':
             return AWSCredentials.from_environment()
-        elif cloud_type == 'gcp':
+        elif cloud_type == 'GCPCloud':
             return GCPCredentials.from_environment()
-        elif cloud_type == 'openstack':
+        elif cloud_type == 'OpenStackCloud':
             return OpenStackCredentials.from_environment()
-        elif cloud_type == 'azure':
+        elif cloud_type == 'AzureCloud':
             return AzureCredentials.from_environment()
         return None
 
     @staticmethod
     def load_from_dict(cloud_type, creds_dict):
         """Load a CloudCredentials subclass instance from given dict."""
-        if cloud_type == 'aws':
+        if cloud_type == 'AWSCloud':
             return AWSCredentials.from_dict(creds_dict)
-        elif cloud_type == 'gcp':
+        elif cloud_type == 'GCPCloud':
             return GCPCredentials.from_dict(creds_dict)
-        elif cloud_type == 'openstack':
+        elif cloud_type == 'OpenStackCloud':
             return OpenStackCredentials.from_dict(creds_dict)
-        elif cloud_type == 'azure':
+        elif cloud_type == 'AzureCloud':
             return AzureCredentials.from_dict(creds_dict)
         return None
 

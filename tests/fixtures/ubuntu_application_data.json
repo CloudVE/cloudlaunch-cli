@@ -13,7 +13,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/networking/?format=json",
                   "region_name":"us-east-1",
-                  "cloud_type":"aws",
+                  "resourcetype":"AWSCloud",
                   "extra_data":{
                      "region_name":"us-east-1",
                      "ec2_endpoint_url":"https://ec2.us-east-1.amazonaws.com",
@@ -80,7 +80,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/networking/?format=json",
                   "region_name":"RegionOne",
-                  "cloud_type":"openstack",
+                  "resourcetype":"OpenStackCloud",
                   "extra_data":{
                      "auth_url":"https://jblb.jetstream-cloud.org:35357/v3",
                      "region_name":"RegionOne",
@@ -139,7 +139,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/networking/?format=json",
                   "region_name":"us-east-1",
-                  "cloud_type":"aws",
+                  "resourcetype":"AWSCloud",
                   "extra_data":{
                      "region_name":"us-east-1",
                      "ec2_endpoint_url":"https://ec2.us-east-1.amazonaws.com",
@@ -194,7 +194,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/networking/?format=json",
                   "region_name":"Melbourne",
-                  "cloud_type":"openstack",
+                  "resourcetype":"OpenStackCloud",
                   "extra_data":{
                      "auth_url":"https://keystone.rc.nectar.org.au:5000/v3/",
                      "region_name":"Melbourne",
@@ -257,7 +257,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/networking/?format=json",
                   "region_name":"RegionOne",
-                  "cloud_type":"openstack",
+                  "resourcetype":"OpenStackCloud",
                   "extra_data":{
                      "auth_url":"https://jblb.jetstream-cloud.org:35357/v3",
                      "region_name":"RegionOne",
@@ -308,7 +308,7 @@
                   "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/storage/?format=json",
                   "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/networking/?format=json",
                   "region_name":"ap-northeast-2",
-                  "cloud_type":"aws",
+                  "resourcetype":"AWSCloud",
                   "extra_data":{
                      "region_name":"ap-northeast-2",
                      "ec2_endpoint_url":"https://ec2.ap-northeast-2.amazonaws.com",

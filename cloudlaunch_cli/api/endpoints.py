@@ -205,20 +205,8 @@ class Users(CoreAPIBasedAPIEndpoint):
     path = ['auth', 'user']
 
 
-class AWSCredentials(CoreAPIBasedAPIEndpoint):
-    path = ['auth', 'user', 'credentials', 'aws']
-
-
-class OpenstackCredentials(CoreAPIBasedAPIEndpoint):
-    path = ['auth', 'user', 'credentials', 'openstack']
-
-
-class AzureCredentials(CoreAPIBasedAPIEndpoint):
-    path = ['auth', 'user', 'credentials', 'azure']
-
-
-class GCPCredentials(CoreAPIBasedAPIEndpoint):
-    path = ['auth', 'user', 'credentials', 'gcp']
+class Credentials(CoreAPIBasedAPIEndpoint):
+    path = ['auth', 'user', 'credentials']
 
 
 class Applications(CoreAPIBasedAPIEndpoint):
@@ -230,4 +218,4 @@ class Applications(CoreAPIBasedAPIEndpoint):
 class Clouds(CoreAPIBasedAPIEndpoint):
     path = ['infrastructure', 'clouds']
     resource_type = resources.Cloud
-    id_param_name = 'slug'
+    id_param_name = 'id'

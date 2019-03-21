@@ -23,10 +23,10 @@ def create_api_client(cloud=None, cloud_credentials_json=None):
         if 'cloud-credentials' in cli_context:
             creds_dict = json.loads(cli_context['cloud-credentials'].read())
             cloud_creds = CloudCredentials.load_from_dict(
-                cloud_resource.cloud_type, creds_dict)
+                cloud_resource.resourcetype, creds_dict)
         else:
             cloud_creds = CloudCredentials.load_from_environment(
-                cloud_resource.cloud_type)
+                cloud_resource.resourcetype)
         if cloud_creds:
             return APIClient(url=conf.url, token=conf.token,
                              cloud_credentials=cloud_creds)
@@ -92,10 +92,11 @@ def deployments(cloud_credentials):
 @click.argument('name')
 @click.argument('application')
 @click.argument('cloud')
+@click.argument('target_id')
 @click.option('--application-version', help='Version of application to launch')
 @click.option('--config-app', type=click.File('rb'),
               help='JSON application config file')
-def create_deployment(name, application, cloud, application_version,
+def create_deployment(name, application, cloud, target_id, application_version,
                       config_app):
     # TODO: if application_version not specified then fetch the default version
     # and use that instead
@@ -104,7 +105,7 @@ def create_deployment(name, application, cloud, application_version,
     params = {
         'name': name,
         'application': application,
-        'target_cloud': cloud,
+        'deployment_target_id': target_id,
         'application_version': application_version
     }
     if config_app:
@@ -193,17 +194,17 @@ def list_clouds():
 
 
 def _print_clouds(clouds):
-    slug_width = max([len(cloud.slug) for cloud in clouds]) + 1
+    id_width = max([len(cloud.id) for cloud in clouds]) + 1
     if len(clouds) > 0:
-        header_format = "{{:{slug_width!s}s}} {{:20s}} {{:12s}} {{:20s}}"\
-                        .format(slug_width=slug_width)
+        header_format = "{{:{id_width!s}s}} {{:20s}} {{:12s}} {{:20s}}"\
+                        .format(id_width=id_width)
         print(header_format.format(
-            "Slug", "Name", "Cloud Type", "Region"))
+            "Id", "Name", "Cloud Type", "Region"))
     else:
         print("No clouds found.")
-    row_format = "{{slug:{slug_width!s}.{slug_width!s}s}} {{name:20.20s}} "\
-                 "{{cloud_type:12.12}} {{region_name:20.20s}}"\
-                 .format(slug_width=slug_width)
+    row_format = "{{id:{id_width!s}.{id_width!s}s}} {{name:20.20s}} "\
+                 "{{resourcetype:12.12}} {{region_name:20.20s}}"\
+                 .format(id_width=id_width)
     for cloud in clouds:
         print(row_format.format(**cloud.asdict()))
 

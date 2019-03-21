@@ -25,12 +25,7 @@ class APIClient:
         self.applications = endpoints.Applications(config)
         self.auth = SimpleNamespace()
         self.auth.user = endpoints.Users(config)
-        credentials = SimpleNamespace()
-        credentials.aws = endpoints.AWSCredentials(config)
-        credentials.openstack = endpoints.OpenstackCredentials(config)
-        credentials.azure = endpoints.AzureCredentials(config)
-        credentials.gcp = endpoints.GCPCredentials(config)
-        self.auth.user.credentials = credentials
+        self.auth.user.credentials = endpoints.Credentials(config)
         self.infrastructure = SimpleNamespace()
         self.infrastructure.clouds = endpoints.Clouds(config)
 
@@ -98,5 +93,5 @@ if __name__ == '__main__':
 
     # Test AWSCredentials
     import json
-    aws_creds = api_client.auth.user.credentials.aws.list()
+    aws_creds = api_client.auth.user.credentials.list()
     print(json.dumps([(aws_cred.name, aws_cred.access_key) for aws_cred in aws_creds], indent=True))

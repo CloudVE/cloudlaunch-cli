@@ -57,7 +57,7 @@ class TestCloudlaunch_cli(unittest.TestCase):
         result = runner.invoke(
             cloudlaunch_cli.main.client,
             args=["deployments", "create", "cli-test-app", "cl_test_app",
-                  "amazon-us-east-n-virginia",
+                  "aws", "1",
                   "--application-version", "16.04",
                   "--config-app",
                   self._get_test_resource("app_cfg_ubuntu.json")])

@@ -146,7 +146,7 @@ class Deployment(APIResource):
 
 
 class Cloud(APIResource):
-    id_field_name = 'slug'
+    id_field_name = 'id'
 
 
 class Image(APIResource):

@@ -3,7 +3,6 @@
       "config_cloudlaunch":{  
          "vmType":"m1.tiny",
          "rootStorageType":"instance",
-         "placementZone":null,
          "keyPair":null,
          "network":null,
          "subnet":null,
