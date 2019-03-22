@@ -4,33 +4,39 @@
    "versions":[
       {
          "version":"14.04",
-         "cloud_config":[
+         "target_config":[
             {
-               "cloud":{
-                  "slug":"amazon-us-east-n-virginia",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/networking/?format=json",
-                  "region_name":"us-east-1",
-                  "resourcetype":"AWSCloud",
-                  "extra_data":{
-                     "region_name":"us-east-1",
-                     "ec2_endpoint_url":"https://ec2.us-east-1.amazonaws.com",
-                     "ec2_is_secure":true,
-                     "ec2_validate_certs":true,
-                     "s3_endpoint_url":"https://s3.amazonaws.com",
-                     "s3_is_secure":true,
-                     "s3_validate_certs":true
-                  },
-                  "added":"2016-06-25T23:08:59.048000-04:00",
-                  "updated":"2017-11-15T03:49:03.900000-05:00",
-                  "name":"Amazon US East 1 - N. Virginia",
-                  "access_instructions_url":"https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key"
-               },
+                "target": {
+                    "id": 1,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "aws",
+                            "name": "Amazon Web Services",
+                            "regions": [
+                                {
+                                    "region_id": "amazon-us-east",
+                                    "cloud": "aws",
+                                    "name": "us-east-1",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-us-east/"
+                                }
+                            ],
+                            "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+                            "resourcetype": "AWSCloud"
+                        },
+                        "region": {
+                            "region_id": "amazon-us-east",
+                            "cloud": "aws",
+                            "name": "us-east-1",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-us-east/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 14.04",
-                  "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/?format=json",
+                  "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/aws/?format=json",
                   "image_id":"ami-fce3c696",
                   "description":""
                },
@@ -69,28 +75,39 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":""
+               }
             },
             {
-               "cloud":{
-                  "slug":"jetstream",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/networking/?format=json",
-                  "region_name":"RegionOne",
-                  "resourcetype":"OpenStackCloud",
-                  "extra_data":{
-                     "auth_url":"https://jblb.jetstream-cloud.org:35357/v3",
-                     "region_name":"RegionOne",
-                     "identity_api_version":"v3.0"
-                  },
-                  "added":"2016-06-28T11:30:29.290000-04:00",
-                  "updated":"2017-11-15T13:54:41.055000-05:00",
-                  "name":"Jetstream",
-                  "access_instructions_url":"https://galaxyproject.org/cloud/jetstream/allocation/#api-access"
-               },
+                "target": {
+                    "id": 2,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "jetstream",
+                            "name": "Jetstream",
+                            "regions": [
+                                {
+                                    "region_id": "jetstream-region",
+                                    "cloud": "jetstream",
+                                    "name": "RegionOne",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/jetstream/regions/jetstream-region/"
+                                }
+                            ],
+                            "auth_url": "https://jblb.jetstream-cloud.org:35357/v3",
+                            "identity_api_version": true,
+                            "access_instructions_url": "https://galaxyproject.org/cloud/jetstream/allocation/#api-access",
+                            "resourcetype": "OpenStackCloud"
+                        },
+                        "region": {
+                            "region_id": "jetstream-region",
+                            "cloud": "jetstream",
+                            "name": "RegionOne",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/jetstream/regions/jetstream-region/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 14.04",
                   "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/?format=json",
@@ -120,40 +137,45 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":""
+               }
             }
          ],
          "frontend_component_path":"app/marketplace/plugins/plugins.module#PluginsModule",
          "frontend_component_name":"ubuntu-config",
-         "default_cloud":null
+         "default_target": null
       },
       {
          "version":"16.04",
-         "cloud_config":[
+         "target_config":[
             {
-               "cloud":{
-                  "slug":"amazon-us-east-n-virginia",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/networking/?format=json",
-                  "region_name":"us-east-1",
-                  "resourcetype":"AWSCloud",
-                  "extra_data":{
-                     "region_name":"us-east-1",
-                     "ec2_endpoint_url":"https://ec2.us-east-1.amazonaws.com",
-                     "ec2_is_secure":true,
-                     "ec2_validate_certs":true,
-                     "s3_endpoint_url":"https://s3.amazonaws.com",
-                     "s3_is_secure":true,
-                     "s3_validate_certs":true
-                  },
-                  "added":"2016-06-25T23:08:59.048000-04:00",
-                  "updated":"2017-11-15T03:49:03.900000-05:00",
-                  "name":"Amazon US East 1 - N. Virginia",
-                  "access_instructions_url":"https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key"
-               },
+                "target": {
+                    "id": 1,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "aws",
+                            "name": "Amazon Web Services",
+                            "regions": [
+                                {
+                                    "region_id": "amazon-us-east",
+                                    "cloud": "aws",
+                                    "name": "us-east-1",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-us-east/"
+                                }
+                            ],
+                            "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+                            "resourcetype": "AWSCloud"
+                        },
+                        "region": {
+                            "region_id": "amazon-us-east",
+                            "cloud": "aws",
+                            "name": "us-east-1",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-us-east/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 16.04 with Docker",
                   "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/?format=json",
@@ -183,28 +205,39 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":""
+               }
             },
             {
-               "cloud":{
-                  "slug":"nectar",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/networking/?format=json",
-                  "region_name":"Melbourne",
-                  "resourcetype":"OpenStackCloud",
-                  "extra_data":{
-                     "auth_url":"https://keystone.rc.nectar.org.au:5000/v3/",
-                     "region_name":"Melbourne",
-                     "identity_api_version":"v3.0"
-                  },
-                  "added":"2016-06-25T22:53:50.475000-04:00",
-                  "updated":"2017-08-31T09:27:33.438000-04:00",
-                  "name":"NeCTAR",
-                  "access_instructions_url":"http://vlsci.github.io/lscc_docs/tutorials/gvl_launch/gvl_launch/"
-               },
+                "target": {
+                    "id": 3,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "nectar",
+                            "name": "NeCTAR",
+                            "regions": [
+                                {
+                                    "region_id": "nectar-mel",
+                                    "cloud": "nectar",
+                                    "name": "Melbourne",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/nectar/regions/nectar-mel/"
+                                }
+                            ],
+                            "auth_url": "https://keystone.rc.nectar.org.au:5000/v3/",
+                            "identity_api_version": true,
+                            "access_instructions_url": "https://www.melbournebioinformatics.org.au/tutorials/tutorials/gvl_launch/gvl_launch/",
+                            "resourcetype": "OpenStackCloud"
+                        },
+                        "region": {
+                            "region_id": "melbourne",
+                            "cloud": "nectar",
+                            "name": "Melbourne",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/nectar/regions/nectar-mel/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 16.04",
                   "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/nectar/?format=json",
@@ -246,28 +279,39 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":""
+               }
             },
             {
-               "cloud":{
-                  "slug":"jetstream",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/networking/?format=json",
-                  "region_name":"RegionOne",
-                  "resourcetype":"OpenStackCloud",
-                  "extra_data":{
-                     "auth_url":"https://jblb.jetstream-cloud.org:35357/v3",
-                     "region_name":"RegionOne",
-                     "identity_api_version":"v3.0"
-                  },
-                  "added":"2016-06-28T11:30:29.290000-04:00",
-                  "updated":"2017-11-15T13:54:41.055000-05:00",
-                  "name":"Jetstream",
-                  "access_instructions_url":"https://galaxyproject.org/cloud/jetstream/allocation/#api-access"
-               },
+                "target": {
+                    "id": 2,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "jetstream",
+                            "name": "Jetstream",
+                            "regions": [
+                                {
+                                    "region_id": "jetstream-region",
+                                    "cloud": "jetstream",
+                                    "name": "RegionOne",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/jetstream/regions/jetstream-region/"
+                                }
+                            ],
+                            "auth_url": "https://jblb.jetstream-cloud.org:35357/v3",
+                            "identity_api_version": true,
+                            "access_instructions_url": "https://galaxyproject.org/cloud/jetstream/allocation/#api-access",
+                            "resourcetype": "OpenStackCloud"
+                        },
+                        "region": {
+                            "region_id": "jetstream-region",
+                            "cloud": "jetstream",
+                            "name": "RegionOne",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/jetstream/regions/jetstream-region/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 16.04",
                   "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/jetstream/?format=json",
@@ -297,32 +341,37 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":null
+               }
             },
             {
-               "cloud":{
-                  "slug":"amazon-ap-seoul",
-                  "compute":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/compute/?format=json",
-                  "security":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/security/?format=json",
-                  "storage":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/storage/?format=json",
-                  "networking":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/networking/?format=json",
-                  "region_name":"ap-northeast-2",
-                  "resourcetype":"AWSCloud",
-                  "extra_data":{
-                     "region_name":"ap-northeast-2",
-                     "ec2_endpoint_url":"https://ec2.ap-northeast-2.amazonaws.com",
-                     "ec2_is_secure":true,
-                     "ec2_validate_certs":true,
-                     "s3_endpoint_url":"https://s3.ap-northeast-2.amazonaws.com",
-                     "s3_is_secure":true,
-                     "s3_validate_certs":true
-                  },
-                  "added":"2017-01-30T16:15:52.293000-05:00",
-                  "updated":"2017-11-15T03:54:47.420000-05:00",
-                  "name":"Amazon AP - Seoul",
-                  "access_instructions_url":"https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key"
-               },
+                "target": {
+                    "id": 2,
+                    "target_zone": {
+                        "cloud": {
+                            "id": "aws",
+                            "name": "Amazon AWS",
+                            "regions": [
+                                {
+                                    "region_id": "amazon-ap-sydney",
+                                    "cloud": "aws",
+                                    "name": "ap-southeast-2",
+                                    "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-ap-sydney/"
+                                }
+                            ],
+                            "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+                            "resourcetype": "AWSCloud"
+                        },
+                        "region": {
+                            "region_id": "ap-northeast-2",
+                            "cloud": "amazon-ap-seoul",
+                            "name": "ap-northeast-2",
+                            "url": "http://localhost:8000/api/v1/infrastructure/clouds/aws/regions/amazon-ap-sydney/"
+                        },
+                        "zone_id": "default",
+                        "name": null
+                    },
+                    "resourcetype": "CloudDeploymentTarget"
+                },
                "image":{
                   "name":"Ubuntu 16.04 LTS",
                   "cloud":"http://localhost:8000/api/v1/infrastructure/clouds/amazon-ap-seoul/?format=json",
@@ -346,13 +395,12 @@
                         }
                      ]
                   }
-               },
-               "default_instance_type":""
+               }
             }
          ],
          "frontend_component_path":"app/marketplace/plugins/plugins.module#PluginsModule",
          "frontend_component_name":"ubuntu-config",
-         "default_cloud":"jetstream"
+         "default_target": 3
       }
    ],
    "default_version":"16.04",

@@ -2,8 +2,34 @@
     "id": 26,
     "name": "my-ubuntu-test",
     "application_version": 5,
-    "target_cloud": "amazon-us-east-n-virginia",
-    "provider_settings": null,
+    "deployment_target": {
+        "id": 1,
+        "target_zone": {
+            "cloud": {
+                "id": "amazon-us-east-n-virginia",
+                "name": "Amazon US East 1 - N. Virginia",
+                "regions": [
+                    {
+                        "region_id": "amazon-us-east",
+                        "cloud": "aws",
+                        "name": "us-east-1",
+                        "url": "http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/regions/us-east-1/"
+                    }
+                ],
+                "access_instructions_url": "https://aws-portal.amazon.com/gp/aws/developer/account/index.html?action=access-key",
+                "resourcetype": "AWSCloud"
+            },
+            "region": {
+                "region_id": "amazon-us-east",
+                "cloud": "aws",
+                "name": "us-east-1",
+                "url": "http://localhost:8000/api/v1/infrastructure/clouds/amazon-us-east-n-virginia/regions/us-east-1/"
+            },
+            "zone_id": "default",
+            "name": null
+        },
+        "resourcetype": "CloudDeploymentTarget"
+    },
     "application_config": {
         "config_cloudlaunch": {
             "instanceType": "t2.small",

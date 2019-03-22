@@ -149,6 +149,10 @@ class Cloud(APIResource):
     id_field_name = 'id'
 
 
+class DeploymentTarget(APIResource):
+    id_field_name = 'id'
+
+
 class Image(APIResource):
     pass
 
@@ -156,14 +160,14 @@ class Image(APIResource):
 class ApplicationVersionCloudConfig(APIResource):
 
     data_mappings = {
-        'cloud': Cloud,
+        'target': DeploymentTarget,
         'image': Image,
     }
 
 
 class ApplicationVersion(APIResource):
     data_mappings = {
-        'cloud_config': ApplicationVersionCloudConfig
+        'target_config': ApplicationVersionCloudConfig
     }
 
 

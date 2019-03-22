@@ -109,11 +109,11 @@ class TestApplication(unittest.TestCase):
         version1, version2 = self.application.versions
         self.assertTrue(isinstance(version1, resources.ApplicationVersion))
         self.assertTrue(isinstance(version2, resources.ApplicationVersion))
-        self.assertEqual(len(version1.cloud_config), 2)
-        for cloud_config in version1.cloud_config:
+        self.assertEqual(len(version1.target_config), 2)
+        for target_config in version1.target_config:
             self.assertTrue(
-                isinstance(cloud_config,
+                isinstance(target_config,
                            resources.ApplicationVersionCloudConfig))
-            self.assertTrue(isinstance(cloud_config.cloud, resources.Cloud))
-            self.assertTrue(isinstance(cloud_config.image, resources.Image))
-        self.assertEqual(len(version2.cloud_config), 4)
+            self.assertTrue(isinstance(target_config.target, resources.DeploymentTarget))
+            self.assertTrue(isinstance(target_config.image, resources.Image))
+        self.assertEqual(len(version2.target_config), 4)
