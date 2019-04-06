@@ -171,9 +171,10 @@ class CoreAPIBasedAPIEndpoint(APIEndpoint):
         http_headers = {}
         if self.api_config.cloud_credentials:
             http_headers = self.api_config.cloud_credentials.to_http_headers()
+        auth = coreapi.auth.TokenAuthentication(scheme='Token', token=auth_token)
         custom_transports = [
             coreapi.transports.HTTPTransport(
-                credentials={hostname: 'Token {}'.format(auth_token)},
+                auth=auth,
                 headers=http_headers)
         ]
         self._client = coreapi.Client(transports=custom_transports)
