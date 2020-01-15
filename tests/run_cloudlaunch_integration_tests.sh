@@ -2,7 +2,7 @@
 
 export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-cloudlaunchserver.settings_test}"
 export CELERY_CONFIG_MODULE="${CELERY_CONFIG_MODULE:-cloudlaunchserver.celeryconfig_test}"
-export CLOUDLAUNCH_SERVER_URL=http://localhost:8000/api/v1
+export CLOUDLAUNCH_SERVER_URL=http://localhost:8000/cloudlaunch/api/v1
 export CLOUDLAUNCH_AUTH_TOKEN=272f075f152e59fd5ea55ca2d21728d2bfe37077
 
 # Change working directory so everything is resolved relative to cloudlaunch-cli root folder
@@ -27,7 +27,7 @@ echo "Waiting for cloudlaunch to start..."
 while ! nc -z localhost 8000; do
   if [[ $TIMEOUT -lt 0 ]]; then
         echo "Timeout waiting for cloudlaunch to start"
-        exit
+        exit 124
   fi
   sleep 0.1
   TIMEOUT=$((TIMEOUT-1))

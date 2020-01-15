@@ -13,8 +13,8 @@ with open('HISTORY.rst') as history_file:
 
 REQS_BASE = [
     'Click>=6.0',
-    'coreapi==2.2.3',
-    'arrow==0.12.0',
+    'coreapi>=2.2.3',
+    'arrow>=0.12.0',
 ]
 
 REQS_TEST = ([
