@@ -90,3 +90,52 @@ class TestCloudlaunch_cli(unittest.TestCase):
             msg="listing regions failed: " + str(result.exception))
         # Verify result columns are in list output
         assert 'us-east-1' in result.output
+        assert 'amazon-us-east' in result.output
+
+    def test_list_zones(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["clouds", "regions",
+                                     "--cloud_id", "aws",
+                                     "zones", "--region_id", "amazon-us-east",
+                                     "list"])
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing zones failed: " + str(result.exception))
+        # Verify result columns are in list output
+        assert 'default' in result.output
+
+    def test_list_vm_types(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["clouds", "regions",
+                                     "--cloud_id", "aws",
+                                     "zones", "--region_id", "amazon-us-east",
+                                     "compute", "--zone_id", "default",
+                                     "vm-types", "list"])
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing vm_types failed: " + str(result.exception))
+        # Verify result columns are in list output
+        assert 'm5.xlarge' in result.output
+        assert 'c5.xlarge' in result.output
+
+    def test_filter_vm_types(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["clouds", "regions",
+                                     "--cloud_id", "aws",
+                                     "zones", "--region_id", "amazon-us-east",
+                                     "compute", "--zone_id", "default",
+                                     "vm-types", "list", "--min_ram", "384",
+                                     "--prefix", "m5"])
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing vm_types failed: " + str(result.exception))
+        # Verify result columns are in list output
+        assert 'm5.xlarge' not in result.output
+        assert 'c5.xlarge' not in result.output
+        assert 'm5.24xlarge' in result.output
