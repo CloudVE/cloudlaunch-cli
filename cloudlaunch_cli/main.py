@@ -183,8 +183,63 @@ def _print_applications(applications):
 
 
 @click.group()
-def clouds():
+@click.pass_context
+def clouds(ctx):
+    ctx.obj = ctx.obj or {}
+
+
+@clouds.group()
+@click.option('--cloud_id', help='Cloud ID')
+@click.pass_context
+def regions(ctx, cloud_id):
+    ctx.obj['cloud_id'] = cloud_id
+
+
+@regions.command(name='list')
+@click.pass_context
+def list_regions(ctx):
+    cloud = create_api_client().infrastructure.clouds.get(ctx.obj['cloud_id'])
+    _print_regions(cloud.regions.list())
+
+
+@regions.group()
+@click.option('--region_id', help='Region ID')
+@click.pass_context
+def zones(ctx, region_id):
+    ctx.obj['region_id'] = region_id
+
+
+@zones.group()
+@click.option('--zone_id', help='Zone ID')
+@click.pass_context
+def compute(ctx, zone_id):
+    ctx.obj['zone_id'] = zone_id
+
+
+@compute.group()
+@click.pass_context
+def vm_types(ctx):
     pass
+
+
+@vm_types.command(name='list')
+@click.option('--min_vcpus', help='Min CPUs', default=0)
+@click.option('--min_ram', help='Min RAM', default=0)
+@click.option('--prefix', help='Prefix of instance family', default="")
+@click.pass_context
+def list_vm_types(ctx, min_vcpus, min_ram, prefix):
+    cloud = create_api_client().infrastructure.clouds.get(ctx.obj['cloud_id'])
+    region = cloud.regions.get(ctx.obj['region_id'])
+    zone = region.zones.get(ctx.obj['zone_id'])
+    _print_vm_types(zone.vm_types.list(min_vcpus=min_vcpus, min_ram=min_ram, vm_type_prefix=prefix))
+
+
+@zones.command(name='list')
+@click.pass_context
+def list_zones(ctx):
+    cloud = create_api_client().infrastructure.clouds.get(ctx.obj['cloud_id'])
+    region = cloud.regions.get(ctx.obj['region_id'])
+    _print_zones(region.zones.list())
 
 
 @click.command()
@@ -196,17 +251,62 @@ def list_clouds():
 def _print_clouds(clouds):
     id_width = max([len(cloud.id) for cloud in clouds]) + 1
     if len(clouds) > 0:
-        header_format = "{{:{id_width!s}s}} {{:20s}} {{:12s}} {{:20s}}"\
+        header_format = "{{:{id_width!s}s}} {{:30s}} {{:20s}}"\
                         .format(id_width=id_width)
         print(header_format.format(
-            "Id", "Name", "Cloud Type", "Region"))
+            "Id", "Name", "Cloud Type"))
     else:
         print("No clouds found.")
-    row_format = "{{id:{id_width!s}.{id_width!s}s}} {{name:20.20s}} "\
-                 "{{resourcetype:12.12}} {{region_name:20.20s}}"\
+    row_format = "{{id:{id_width!s}.{id_width!s}s}} {{name:30.30s}} "\
+                 "{{resourcetype:20.20}}"\
                  .format(id_width=id_width)
     for cloud in clouds:
         print(row_format.format(**cloud.asdict()))
+
+
+def _print_regions(regions):
+    id_width = max([len(region.id) for region in regions]) + 1
+    if len(regions) > 0:
+        header_format = "{{:{id_width!s}s}} {{:30s}}"\
+                        .format(id_width=id_width)
+        print(header_format.format(
+            "Id", "Name"))
+    else:
+        print("No regions found.")
+    row_format = "{{region_id:{id_width!s}.{id_width!s}s}} {{name:30.30s}}" \
+                 .format(id_width=id_width)
+    for region in regions:
+        print(row_format.format(**region.asdict()))
+
+
+def _print_zones(zones):
+    id_width = max([len(zone.id) for zone in zones]) + 1
+    if len(zones) > 0:
+        header_format = "{{:{id_width!s}s}} {{:30s}}"\
+                        .format(id_width=id_width)
+        print(header_format.format(
+            "Id", "Name"))
+    else:
+        print("No zones found.")
+    row_format = "{{zone_id:{id_width!s}.{id_width!s}s}} {{name}}" \
+                 .format(id_width=id_width)
+    for zone in zones:
+        print(row_format.format(**zone.asdict()))
+
+
+def _print_vm_types(vm_types):
+    id_width = max([len(vm_type.id) for vm_type in vm_types]) + 1
+    if len(vm_types) > 0:
+        header_format = "{{:{id_width!s}s}} {{:30s}} {{:20s}} {{:20s}}"\
+                        .format(id_width=id_width)
+        print(header_format.format(
+            "Id", "Name", "CPUs", "RAM"))
+    else:
+        print("No vm types found.")
+    row_format = "{{id:{id_width!s}.{id_width!s}s}} {{name:30.30s}} {{vcpus:20.20s}} {{ram:20.20s}}" \
+                 .format(id_width=id_width)
+    for vm_type in vm_types:
+        print(row_format.format(**vm_type.asdict()))
 
 
 client.add_command(deployments)

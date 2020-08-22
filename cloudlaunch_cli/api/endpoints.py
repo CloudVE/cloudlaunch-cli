@@ -5,6 +5,11 @@ try:
 except ImportError:  # python 2
     from urlparse import urlparse
 
+try:
+    from types import SimpleNamespace
+except:  # Python 2
+    from argparse import Namespace as SimpleNamespace
+
 import coreapi
 
 from . import resources
@@ -219,4 +224,46 @@ class Applications(CoreAPIBasedAPIEndpoint):
 class Clouds(CoreAPIBasedAPIEndpoint):
     path = ['infrastructure', 'clouds']
     resource_type = resources.Cloud
+    id_param_name = 'id'
+    _regions = None
+
+    @property
+    def regions(self):
+        if not self._regions:
+            self._regions = Regions(self.api_config)
+        return self._regions
+
+
+class Regions(CoreAPIBasedAPIEndpoint):
+    path = ['infrastructure', 'clouds', 'regions']
+    resource_type = resources.Region
+    parent_url_kwarg = 'cloud_pk'
+    id_param_name = 'id'
+    _zones = None
+
+    @property
+    def zones(self):
+        if not self._zones:
+            self._zones = Zones(self.api_config)
+        return self._zones
+
+
+class Zones(CoreAPIBasedAPIEndpoint):
+    path = ['infrastructure', 'clouds', 'regions', 'zones']
+    resource_type = resources.Zone
+    parent_url_kwarg = 'region_pk'
+    id_param_name = 'id'
+    _vm_types = None
+
+    @property
+    def vm_types(self):
+        if not self._vm_types:
+            self._vm_types = VmTypes(self.api_config)
+        return self._vm_types
+
+
+class VmTypes(CoreAPIBasedAPIEndpoint):
+    path = ['infrastructure', 'clouds', 'regions', 'zones', 'compute', 'vm_types']
+    resource_type = resources.VmType
+    parent_url_kwarg = 'zone_pk'
     id_param_name = 'id'

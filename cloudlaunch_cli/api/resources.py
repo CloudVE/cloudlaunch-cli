@@ -148,6 +148,26 @@ class Deployment(APIResource):
 class Cloud(APIResource):
     id_field_name = 'id'
 
+    @property
+    def regions(self):
+        return self.subroute_for(Region)
+
+
+class Region(APIResource):
+    id_field_name = 'region_id'
+
+    @property
+    def zones(self):
+        return self.subroute_for(Zone)
+
+
+class Zone(APIResource):
+    id_field_name = 'zone_id'
+
+    @property
+    def vm_types(self):
+        return self.subroute_for(VmType)
+
 
 class DeploymentTarget(APIResource):
     id_field_name = 'id'
@@ -176,3 +196,7 @@ class Application(APIResource):
         'versions': ApplicationVersion
     }
     id_field_name = 'slug'
+
+
+class VmType(APIResource):
+    id_field_name = 'id'
