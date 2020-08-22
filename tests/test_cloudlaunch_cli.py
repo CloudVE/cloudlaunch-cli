@@ -15,9 +15,11 @@ class TestCloudlaunch_cli(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures, if any."""
+        pass
 
     def tearDown(self):
         """Tear down test fixtures, if any."""
+        pass
 
     def _get_test_resource(self, filename):
         return os.path.join(self._get_test_resource_path(), filename)
@@ -65,3 +67,26 @@ class TestCloudlaunch_cli(unittest.TestCase):
             result.exit_code, 0,
             msg="create deployment failed: " + str(result.exception))
         assert('cli-test-app' in result.output)
+
+    def test_list_clouds(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["clouds", "list"])
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing clouds failed: " + str(result.exception))
+        # Verify result columns are in list output
+        assert 'aws' in result.output
+
+    def test_list_regions(self):
+        """Test listing applications via CLI"""
+        runner = CliRunner()
+        result = runner.invoke(cloudlaunch_cli.main.client,
+                               args=["clouds", "regions",
+                                     "--cloud_id", "aws", "list"])
+        self.assertEqual(
+            result.exit_code, 0,
+            msg="listing regions failed: " + str(result.exception))
+        # Verify result columns are in list output
+        assert 'us-east-1' in result.output
