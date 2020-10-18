@@ -119,8 +119,8 @@ class TestCloudlaunch_cli(unittest.TestCase):
             result.exit_code, 0,
             msg="listing vm_types failed: " + str(result.exception))
         # Verify result columns are in list output
-        assert 'm5.xlarge' in result.output
-        assert 'c5.xlarge' in result.output
+        assert 'm5.24xlarge' in result.output
+        assert 'r5.24xlarge' in result.output
 
     def test_filter_vm_types(self):
         """Test listing applications via CLI"""

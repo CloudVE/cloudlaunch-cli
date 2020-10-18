@@ -1,5 +1,7 @@
-git+git://github.com/spulec/moto#egg=moto
-python-dateutil==2.8.1
+# install edge till this is released: https://github.com/encode/django-rest-framework/pull/7571
+git+https://github.com/encode/django-rest-framework
+# install edge till this is released: https://github.com/celery/django-celery-results/issues/157
+git+https://github.com/celery/django-celery-results
 git+git://github.com/CloudVE/cloudbridge#egg=cloudbridge
 git+git://github.com/CloudVE/djcloudbridge#egg=djcloudbridge
 git+git://github.com/galaxyproject/cloudlaunch#egg=cloudlaunch[test]
