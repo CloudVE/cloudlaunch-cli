@@ -124,8 +124,8 @@ def list_deployments(archived):
 
 def _print_deployments(deployments):
     if len(deployments) > 0:
-        print("{:24s}  {:15s}  {:20s}  {:15s}".format(
-            "Name", "Created", "Status", "Address"))
+        print("{:6s}  {:24s}  {:6s}  {:15s}  {:20s}  {:15s}".format(
+            "ID", "Name", "Cloud", "Created", "Status", "Address"))
     else:
         print("No deployments.")
     for deployment in deployments:
@@ -137,8 +137,10 @@ def _print_deployments(deployments):
             action=latest_task.action,
             latest_task_status=latest_task_status)
         ip_address = deployment.public_ip if deployment.public_ip else 'N/A'
-        print("{name:24.24s}  {created_date:15.15s}  "
+        cloud = deployment._data['deployment_target']['target_zone']['cloud']['id']
+        print("{identifier:6d}  {name:24.24s}  {cloud:6.6s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
+                  identifier=deployment._id, cloud=cloud,
                   created_date=created_date.humanize(),
                   latest_task_display=latest_task_display,
                   ip_address=ip_address, **deployment._data))
