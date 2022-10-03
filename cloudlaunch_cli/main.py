@@ -115,14 +115,6 @@ def create_deployment(name, application, cloud, target_id, application_version,
 
 
 @click.command()
-@click.argument('id')
-@click.argument('cloud')
-def delete_deployment(id, cloud):
-    cloudlaunch_client = create_api_client(cloud)
-    cloudlaunch_client.deployments.delete(id)
-
-
-@click.command()
 @click.option('--archived', is_flag=True,
               help='Show only archived deployments')
 def list_deployments(archived):
@@ -132,8 +124,8 @@ def list_deployments(archived):
 
 def _print_deployments(deployments):
     if len(deployments) > 0:
-        print("{:24s}  {:15s}  {:20s}  {:15s}".format(
-            "Name", "Created", "Status", "Address"))
+        print("{:6s}  {:24s}  {:6s}  {:15s}  {:20s}  {:15s}".format(
+            "ID", "Name", "Cloud", "Created", "Status", "Address"))
     else:
         print("No deployments.")
     for deployment in deployments:
@@ -145,8 +137,10 @@ def _print_deployments(deployments):
             action=latest_task.action,
             latest_task_status=latest_task_status)
         ip_address = deployment.public_ip if deployment.public_ip else 'N/A'
-        print("{name:24.24s}  {created_date:15.15s}  "
+        cloud = deployment._data['deployment_target']['target_zone']['cloud']['id']
+        print("{identifier:6d}  {name:24.24s}  {cloud:6.6s}  {created_date:15.15s}  "
               "{latest_task_display:20.20s}  {ip_address:15.15s}".format(
+                  identifier=deployment._id, cloud=cloud,
                   created_date=created_date.humanize(),
                   latest_task_display=latest_task_display,
                   ip_address=ip_address, **deployment._data))
@@ -327,7 +321,6 @@ config.add_command(show_config, name='show')
 
 deployments.add_command(create_deployment, name='create')
 deployments.add_command(list_deployments, name='list')
-deployments.add_command(delete_deployment, name='delete')
 
 applications.add_command(create_application, name='create')
 applications.add_command(list_applications, name='list')
