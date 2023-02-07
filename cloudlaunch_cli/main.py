@@ -115,6 +115,14 @@ def create_deployment(name, application, cloud, target_id, application_version,
 
 
 @click.command()
+@click.argument('id')
+@click.argument('cloud')
+def delete_deployment(id, cloud):
+    cloudlaunch_client = create_api_client(cloud)
+    cloudlaunch_client.deployments.delete(id)
+
+
+@click.command()
 @click.option('--archived', is_flag=True,
               help='Show only archived deployments')
 def list_deployments(archived):
@@ -321,6 +329,7 @@ config.add_command(show_config, name='show')
 
 deployments.add_command(create_deployment, name='create')
 deployments.add_command(list_deployments, name='list')
+deployments.add_command(delete_deployment, name='delete')
 
 applications.add_command(create_application, name='create')
 applications.add_command(list_applications, name='list')
